@@ -77,7 +77,7 @@ function main(): void {
   console.log('Equilateral triangle:');
   console.table(findAllSymmetryLines([
     {x: -1, y: 0},
-    {x: 0, y: 3**.5},
+    {x: 0, y: Math.sqrt(3)},
     {x: 1, y: 0},
   ]));
 }
