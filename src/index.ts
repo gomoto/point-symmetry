@@ -1,4 +1,5 @@
 const DEBUG = false;
+const EPSILON = 0.000001;
 
 main();
 
@@ -175,14 +176,14 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
   if (isLineHorizontal(line)) {
     isPointOnLine = p.y === line.p1.y;
   } else if (isLineVertical(line)) {
-    isPointOnLine = p.x === line.p1.x;
+    isPointOnLine = isNearZero(p.x - line.p1.x);
   } else if (line.p1.x === p.x) { // check if p is p1
-    isPointOnLine = line.p1.y === p.y;
+    isPointOnLine = isNearZero(line.p1.y - p.y);
   } else if (line.p2.x === p.x) { // check if p is p2
-    isPointOnLine = line.p2.y === p.y;
+    isPointOnLine = isNearZero(line.p2.y - p.y);
   } else {
     const diff = (line.p1.y - p.y) / (line.p1.x - p.x) - (line.p2.y - p.y) / (line.p2.x - p.x);
-    isPointOnLine = diff === 0; // epsilon?
+    isPointOnLine = isNearZero(diff);
   }
   debug('isPointOnLine?', isPointOnLine, point, line);
   return isPointOnLine;
@@ -292,6 +293,12 @@ function findLineSlope(line: Line): number {
     return slope;
   }
   return Infinity;
+}
+
+// Determine if a number is "zero" or less than some small value epsilon.
+// Rounded floating point numbers are often close but not exact.
+function isNearZero(value: number): boolean {
+  return Math.abs(value) < EPSILON;
 }
 
 function debug(...args: any[]) {
