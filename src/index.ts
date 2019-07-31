@@ -44,6 +44,15 @@ function main(): void {
     {x: -2, y: 0},
   ];
   console.table(findAllSymmetryLines(rhombusPoints));
+
+  console.log('Kite');
+  const kitePoints = [
+    {x: 0, y: 1},
+    {x: 1, y: 0},
+    {x: -1, y: 0},
+    {x: 0, y: -5},
+  ];
+  console.table(findAllSymmetryLines(kitePoints));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
