@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 const EPSILON = 0.000001;
 
 main();
@@ -95,6 +95,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   const pairs: MultiPoint[] = findPointPairs(points);
   // debug(JSON.stringify(pairs, null, 2));
   const centerPoint: MultiPoint = { points };
+  debug('center point', centerPoint);
   // Keep only those lines which:
   // 1. Pass through global center. All lines of symmetry pass through global center.
   // 2. Have an unencountered slope; there can be only one line
@@ -166,8 +167,8 @@ function findPointPairs(points: Point[]): MultiPoint[] {
 
 function isPointOnLine(point: MultiPoint, line: Line): boolean {
   // average point
-  const px = point.points.reduce((sum, point) => sum + point.x, 0);
-  const py = point.points.reduce((sum, point) => sum + point.y, 0);
+  const px = point.points.reduce((sum, point) => sum + point.x, 0) / point.points.length;
+  const py = point.points.reduce((sum, point) => sum + point.y, 0) / point.points.length;
   const p: Point = {
     x: px,
     y: py,
