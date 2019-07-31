@@ -20,8 +20,23 @@ function findAllSymmetryLines(points: Point[]): Line[] {
 
 function findCandidateSymmetryLines(points: Point[]): Line[] {
   const pairs: MultiPoint[] = findPointPairs(points);
-  console.log(JSON.stringify(pairs, null, 2));
-  return [];
+  // console.log(JSON.stringify(pairs, null, 2));
+  const centerPoint: MultiPoint = { points };
+  const candidateLines: Line[] = [];
+  pairs.forEach((pair) => {
+    const crossLine: Line = {
+      a: pair.points[0],
+      b: pair.points[1],
+    };
+    if (isPointOnLine(centerPoint, crossLine)) {
+      candidateLines.push(crossLine);
+    }
+    const throughLine: Line = createNormalLine(crossLine);
+    if (isPointOnLine(centerPoint, throughLine)) {
+      candidateLines.push(throughLine);
+    }
+  });
+  return candidateLines;
 }
 function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
   return true;
@@ -43,6 +58,14 @@ function findPointPairs(points: Point[]): MultiPoint[] {
     }
   }
   return pairs;
+}
+
+function isPointOnLine(point: MultiPoint, line: Line): boolean {
+  return true;
+}
+
+function createNormalLine(line: Line): Line {
+  return line;
 }
 
 interface Point {
