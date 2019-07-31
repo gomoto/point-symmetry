@@ -88,9 +88,9 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
     y: py,
   };
   let isPointOnLine: boolean;
-  if (line.p1.y === line.p2.y) { // line is horizontal
+  if (isLineHorizontal(line)) {
     isPointOnLine = p.y === line.p1.y;
-  } else if (line.p1.x === line.p2.x) { // line is vertical
+  } else if (isLineVertical(line)) {
     isPointOnLine = p.x === line.p1.x;
   } else if (line.p1.x === p.x) { // check if p is p1
     isPointOnLine = line.p1.y === p.y;
@@ -108,12 +108,12 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
 function createNormalLine(line: Line, point: Point): Line {
   // other point on normal line should be different from given point
   let otherPoint: Point;
-  if (line.p1.y === line.p2.y) { // line is horizontal
+  if (isLineHorizontal(line)) {
     otherPoint = {
       x: point.x,
       y: point.y + 1,
     };
-  } else if (line.p1.x === line.p2.x) { // line is vertical
+  } else if (isLineVertical(line)) {
     otherPoint = {
       x: point.x + 1,
       y: point.y,
@@ -158,12 +158,12 @@ function reflectPointAcrossLine(point: Point, line: Line): Point {
 
 function projectPointOntoLine(point: Point, line: Line): Point {
   let intersectionPoint: Point;
-  if (line.p1.y === line.p2.y) { // line is horizontal
+  if (isLineHorizontal(line)) {
     intersectionPoint = {
       x: point.x,
       y: line.p1.y,
     };
-  } else if (line.p1.x === line.p2.x) { // line is vertical
+  } else if (isLineVertical(line)) {
     intersectionPoint = {
       x: line.p1.x,
       y: point.y,
@@ -187,6 +187,14 @@ function projectPointOntoLine(point: Point, line: Line): Point {
     };
   }
   return intersectionPoint;
+}
+
+function isLineHorizontal(line: Line): boolean {
+  return line.p1.y === line.p2.y;
+}
+
+function isLineVertical(line: Line): boolean {
+  return line.p1.x === line.p2.x;
 }
 
 interface Point {
