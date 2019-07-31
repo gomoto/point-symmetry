@@ -1,6 +1,14 @@
 main();
 
 function main(): void {
+  console.log('Isosceles triangle');
+  const isoscelesPoints = [
+    {x: -1, y: 0},
+    {x: 0, y: 3},
+    {x: 1, y: 0},
+  ];
+  console.table(findAllSymmetryLines(isoscelesPoints));
+
   console.log('Square');
   const squarePoints = [
     {x: -1, y: -1},
@@ -10,13 +18,14 @@ function main(): void {
   ];
   console.table(findAllSymmetryLines(squarePoints));
 
-  console.log('Isosceles triangle');
-  const isoscelesPoints = [
-    {x: -1, y: 0},
-    {x: 0, y: 3},
-    {x: 1, y: 0},
+  console.log('Rectangle');
+  const rectanglePoints = [
+    {x: -3, y: -1},
+    {x: 3, y: -1},
+    {x: -3, y: 1},
+    {x: 3, y: 1},
   ];
-  console.table(findAllSymmetryLines(isoscelesPoints));
+  console.table(findAllSymmetryLines(rectanglePoints));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
