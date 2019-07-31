@@ -1,3 +1,5 @@
+const DEBUG = false;
+
 main();
 
 function main(): void {
@@ -57,7 +59,7 @@ function main(): void {
 
 function findAllSymmetryLines(points: Point[]): Line[] {
   const candidateLines = findCandidateSymmetryLines(points);
-  console.log('candidateLines', candidateLines);
+  debug('candidateLines', candidateLines);
   const symmetryLines = candidateLines.filter((line) => doesLineReflectAllPoints(line, points));
   return symmetryLines;
 }
@@ -65,18 +67,18 @@ function findAllSymmetryLines(points: Point[]): Line[] {
 function findCandidateSymmetryLines(points: Point[]): Line[] {
   const candidateLines: Line[] = [];
   const pairs: MultiPoint[] = findPointPairs(points);
-  // console.log(JSON.stringify(pairs, null, 2));
+  // debug(JSON.stringify(pairs, null, 2));
   const centerPoint: MultiPoint = { points };
   // Deduplicate lines by slope; there can be only one line with
   // given slope that also passes through global center.
   const candidateLineSlopes = new Set<number>();
   pairs.forEach((pair) => {
-    console.log();
+    debug();
     const crossLine: Line = {
       p1: pair.points[0],
       p2: pair.points[1],
     };
-    console.log('cross line:', crossLine);
+    debug('cross line:', crossLine);
     if (isPointOnLine(centerPoint, crossLine)) {
       const slope = findLineSlope(crossLine);
       if (!candidateLineSlopes.has(slope)) {
@@ -90,7 +92,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
       y: (crossLine.p1.y + crossLine.p2.y) / 2,
     };
     const normalLine: Line = createNormalLine(crossLine, midpoint);
-    console.log('normal line:', normalLine)
+    debug('normal line:', normalLine)
     if (isPointOnLine(centerPoint, normalLine)) {
       const slope = findLineSlope(normalLine);
       if (!candidateLineSlopes.has(slope)) {
@@ -99,7 +101,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
       }
     }
   });
-  console.log('candidate slopes', candidateLineSlopes);
+  debug('candidate slopes', candidateLineSlopes);
   return candidateLines;
 }
 
@@ -155,7 +157,7 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
     const diff = (line.p1.y - p.y) / (line.p1.x - p.x) - (line.p2.y - p.y) / (line.p2.x - p.x);
     isPointOnLine = diff === 0; // epsilon?
   }
-  console.log('isPointOnLine?', isPointOnLine, point, line);
+  debug('isPointOnLine?', isPointOnLine, point, line);
   return isPointOnLine;
 }
 
@@ -263,6 +265,12 @@ function findLineSlope(line: Line): number {
     return slope;
   }
   return Infinity;
+}
+
+function debug(...args: any[]) {
+  if (DEBUG) {
+    console.debug(...args);
+  }
 }
 
 interface Point {
