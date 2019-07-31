@@ -24,6 +24,8 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   const centerPoint: MultiPoint = { points };
   const candidateLines: Line[] = [];
   pairs.forEach((pair) => {
+    console.log();
+    console.log('pair:', pair);
     const crossLine: Line = {
       a: pair.points[0],
       b: pair.points[1],
@@ -32,6 +34,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
       candidateLines.push(crossLine);
     }
     const throughLine: Line = createNormalLine(crossLine);
+    console.log('normal line:', throughLine)
     if (isPointOnLine(centerPoint, throughLine)) {
       candidateLines.push(throughLine);
     }
@@ -69,13 +72,44 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
     y: py,
   };
   const diff = (line.a.y - p.y) / (line.a.x - p.x) - (line.b.y - p.y) / (line.b.x - p.x);
-  const isPointOnLine = diff === 0;
+  const isPointOnLine = diff === 0; // epsilon?
   // console.log(isPointOnLine);
   return isPointOnLine;
 }
 
 function createNormalLine(line: Line): Line {
-  return line;
+  // midpoint on line is also point on normal line
+  const midpoint: Point = {
+    x: (line.a.x + line.b.x) / 2,
+    y: (line.a.y + line.b.y) / 2,
+  };
+  // other point on normal line should be different from midpoint
+  let otherPoint: Point;
+  if (line.a.y === line.b.y) { // line is horizontal
+    otherPoint = {
+      x: midpoint.x,
+      y: midpoint.y + 1,
+    };
+  } else if (line.a.x === line.b.x) { // line is vertical
+    otherPoint = {
+      x: midpoint.x + 1,
+      y: midpoint.y,
+    };
+  } else {
+    // 1st order polynomial coefficient (negative reciprocal of 1st order coefficient of original line)
+    const c1 = (line.a.x - line.b.x) / (line.b.y - line.a.y);
+    // 0th order polynomial coefficient
+    const c0 = midpoint.y - c1 * midpoint.x;
+    otherPoint = {
+      x: midpoint.x + 1,
+      y: c1 * (midpoint.x + 1) + c0,
+    };
+  }
+  const normalLine: Line = {
+    a: midpoint,
+    b: otherPoint,
+  };
+  return normalLine;
 }
 
 interface Point {
