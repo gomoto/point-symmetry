@@ -3,13 +3,6 @@ const DEBUG = false;
 main();
 
 function main(): void {
-  console.log('Isosceles triangle:');
-  console.table(findAllSymmetryLines([
-    {x: -1, y: 0},
-    {x: 0, y: 3},
-    {x: 1, y: 0},
-  ]));
-
   console.log('Square:');
   console.table(findAllSymmetryLines([
     {x: -1, y: -1},
@@ -72,6 +65,20 @@ function main(): void {
     {x: -1, y: 1},
     {x: 1, y: 0},
     {x: 2, y: 1},
+  ]));
+
+  console.log('Isosceles triangle:');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: 0, y: 3},
+    {x: 1, y: 0},
+  ]));
+
+  console.log('Equilateral triangle:');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: 0, y: 3**.5},
+    {x: 1, y: 0},
   ]));
 }
 
