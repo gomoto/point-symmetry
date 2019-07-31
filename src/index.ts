@@ -166,7 +166,7 @@ function findPointPairs(points: Point[]): MultiPoint[] {
 function isPointOnLine(point: MultiPoint, line: Line): boolean {
   // average point
   const px = point.points.reduce((sum, point) => sum + point.x, 0);
-  const py = point.points.reduce((sum, point) => sum + point.x, 0);
+  const py = point.points.reduce((sum, point) => sum + point.y, 0);
   const p: Point = {
     x: px,
     y: py,
