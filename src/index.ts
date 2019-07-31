@@ -63,8 +63,10 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   const pairs: MultiPoint[] = findPointPairs(points);
   // debug(JSON.stringify(pairs, null, 2));
   const centerPoint: MultiPoint = { points };
-  // Deduplicate lines by slope; there can be only one line with
-  // given slope that also passes through global center.
+  // Keep only those lines which:
+  // 1. Pass through global center. All lines of symmetry pass through global center.
+  // 2. Have an unencountered slope; there can be only one line
+  //    for each slope that also passes through global center.
   const candidateLineSlopes = new Set<number>();
   pairs.forEach((pair) => {
     debug();
