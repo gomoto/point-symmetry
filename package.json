@@ -1,0 +1,13 @@
+{
+  "name": "point-symmetry",
+  "version": "1.0.0",
+  "description": "Find all lines of symmetry for a set of points",
+  "scripts": {
+    "start": "ts-node --project tsconfig.json src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^12.6.8",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  }
+}
