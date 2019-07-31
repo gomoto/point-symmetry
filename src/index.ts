@@ -119,9 +119,19 @@ function createNormalLine(line: Line, point: Point): Line {
       y: point.y,
     };
   } else {
-    // 1st order polynomial coefficient (negative reciprocal of 1st order coefficient of original line)
+    // Solve line 1 for a, b given two points P1, P2:
+    //   y = ax + b
+    //   a = (P2.y - P1.y) / (P2.x - P1.x)
+    //   b = P2.y - a * P2.x
+
+    // Solve line 2 for a', b' given one point P3 and knowing that line 2 is perpendicular to line 1:
+    //   y = a'x + b
+    //   a' = (P1.x - P2.x) / (P2.y - P1.y) [negative reciprocal of a]
+    //   b' = P3.y - a' * P3.x
+
+    // 1st order polynomial coefficient, a'
     const c1 = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
-    // 0th order polynomial coefficient
+    // 0th order polynomial coefficient, b'
     const c0 = point.y - c1 * point.x;
     otherPoint = {
       x: point.x + 1,
@@ -160,7 +170,13 @@ function projectPointOntoLine(point: Point, line: Line): Point {
     };
   } else {
     const normal = createNormalLine(line, point);
-    // intersect lines. lines are guaranteed to intersect because they're normal
+    // Intersect lines. Lines are guaranteed to intersect because they're normal.
+    // Solve for x, y:
+    //   y = ax + b
+    //   y = a'x + b'
+    //   ---
+    //   x = (b' - b) / (a - a')
+    //   y = a * (b' - b) / (a - a') + b
     const lineC1 = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
     const lineC0 = line.p2.y - lineC1 * line.p2.x;
     const normalC1 = (normal.p2.y - normal.p1.y) / (normal.p2.x - normal.p1.x);
