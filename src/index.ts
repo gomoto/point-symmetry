@@ -26,11 +26,11 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   const candidateLines: Line[] = [];
   pairs.forEach((pair) => {
     console.log();
-    console.log('pair:', pair);
     const crossLine: Line = {
       p1: pair.points[0],
       p2: pair.points[1],
     };
+    console.log('cross line:', crossLine);
     if (isPointOnLine(centerPoint, crossLine)) {
       candidateLines.push(crossLine);
     }
@@ -87,9 +87,20 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
     x: px,
     y: py,
   };
-  const diff = (line.p1.y - p.y) / (line.p1.x - p.x) - (line.p2.y - p.y) / (line.p2.x - p.x);
-  const isPointOnLine = diff === 0; // epsilon?
-  // console.log(isPointOnLine);
+  let isPointOnLine: boolean;
+  if (line.p1.y === line.p2.y) { // line is horizontal
+    isPointOnLine = p.y === line.p1.y;
+  } else if (line.p1.x === line.p2.x) { // line is vertical
+    isPointOnLine = p.x === line.p1.x;
+  } else if (line.p1.x === p.x) { // check if p is p1
+    isPointOnLine = line.p1.y === p.y;
+  } else if (line.p2.x === p.x) { // check if p is p2
+    isPointOnLine = line.p2.y === p.y;
+  } else {
+    const diff = (line.p1.y - p.y) / (line.p1.x - p.x) - (line.p2.y - p.y) / (line.p2.x - p.x);
+    isPointOnLine = diff === 0; // epsilon?
+  }
+  console.log('isPointOnLine?', isPointOnLine, point, line);
   return isPointOnLine;
 }
 
