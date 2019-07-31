@@ -49,6 +49,14 @@ function main(): void {
     {x: -1, y: 0},
     {x: 0, y: -5},
   ]));
+
+  console.log('Trapezoid:');
+  console.table(findAllSymmetryLines([
+    {x: -2, y: 0},
+    {x: -1, y: 1},
+    {x: 1, y: 1},
+    {x: 2, y: 0},
+  ]));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
