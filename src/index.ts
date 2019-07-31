@@ -3,58 +3,52 @@ const DEBUG = false;
 main();
 
 function main(): void {
-  console.log('Isosceles triangle');
-  const isoscelesPoints = [
+  console.log('Isosceles triangle:');
+  console.table(findAllSymmetryLines([
     {x: -1, y: 0},
     {x: 0, y: 3},
     {x: 1, y: 0},
-  ];
-  console.table(findAllSymmetryLines(isoscelesPoints));
+  ]));
 
-  console.log('Square');
-  const squarePoints = [
+  console.log('Square:');
+  console.table(findAllSymmetryLines([
     {x: -1, y: -1},
     {x: 1, y: -1},
     {x: -1, y: 1},
     {x: 1, y: 1},
-  ];
-  console.table(findAllSymmetryLines(squarePoints));
+  ]));
 
-  console.log('Rectangle');
-  const rectanglePoints = [
+  console.log('Rectangle:');
+  console.table(findAllSymmetryLines([
     {x: -3, y: -1},
     {x: 3, y: -1},
     {x: -3, y: 1},
     {x: 3, y: 1},
-  ];
-  console.table(findAllSymmetryLines(rectanglePoints));
+  ]));
 
-  console.log('Rotated square');
-  const rotatedSquarePoints = [
+  console.log('Rotated square:');
+  console.table(findAllSymmetryLines([
     {x: 0, y: 1},
     {x: 0, y: -1},
     {x: 1, y: 0},
     {x: -1, y: 0},
-  ];
-  console.table(findAllSymmetryLines(rotatedSquarePoints));
+  ]));
 
-  console.log('Rhombus');
-  const rhombusPoints = [
+  console.log('Rhombus:');
+  console.table(findAllSymmetryLines([
     {x: 0, y: 1},
     {x: 0, y: -1},
     {x: 2, y: 0},
     {x: -2, y: 0},
-  ];
-  console.table(findAllSymmetryLines(rhombusPoints));
+  ]));
 
-  console.log('Kite');
-  const kitePoints = [
+  console.log('Kite:');
+  console.table(findAllSymmetryLines([
     {x: 0, y: 1},
     {x: 1, y: 0},
     {x: -1, y: 0},
     {x: 0, y: -5},
-  ];
-  console.table(findAllSymmetryLines(kitePoints));
+  ]));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
