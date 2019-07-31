@@ -65,6 +65,14 @@ function main(): void {
     {x: 1, y: 1},
     {x: 3, y: 0},
   ]));
+
+  console.log('Parallelogram:');
+  console.table(findAllSymmetryLines([
+    {x: -2, y: 0},
+    {x: -1, y: 1},
+    {x: 1, y: 0},
+    {x: 2, y: 1},
+  ]));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
