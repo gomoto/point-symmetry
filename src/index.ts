@@ -27,12 +27,21 @@ function main(): void {
   ];
   console.table(findAllSymmetryLines(rectanglePoints));
 
-  console.log('Rhombus');
-  const rhombusPoints = [
+  console.log('Rotated square');
+  const rotatedSquarePoints = [
     {x: 0, y: 1},
     {x: 0, y: -1},
     {x: 1, y: 0},
     {x: -1, y: 0},
+  ];
+  console.table(findAllSymmetryLines(rotatedSquarePoints));
+
+  console.log('Rhombus');
+  const rhombusPoints = [
+    {x: 0, y: 1},
+    {x: 0, y: -1},
+    {x: 2, y: 0},
+    {x: -2, y: 0},
   ];
   console.table(findAllSymmetryLines(rhombusPoints));
 }
