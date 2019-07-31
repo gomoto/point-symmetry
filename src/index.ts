@@ -20,10 +20,13 @@ function findAllSymmetryLines(points: Point[]): Line[] {
 }
 
 function findCandidateSymmetryLines(points: Point[]): Line[] {
+  const candidateLines: Line[] = [];
   const pairs: MultiPoint[] = findPointPairs(points);
   // console.log(JSON.stringify(pairs, null, 2));
   const centerPoint: MultiPoint = { points };
-  const candidateLines: Line[] = [];
+  // Deduplicate lines by slope; there can be only one line with
+  // given slope that also passes through global center.
+  const candidateLineSlopes = new Set<number>();
   pairs.forEach((pair) => {
     console.log();
     const crossLine: Line = {
@@ -32,7 +35,11 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     };
     console.log('cross line:', crossLine);
     if (isPointOnLine(centerPoint, crossLine)) {
-      candidateLines.push(crossLine);
+      const slope = findLineSlope(crossLine);
+      if (!candidateLineSlopes.has(slope)) {
+        candidateLines.push(crossLine);
+        candidateLineSlopes.add(slope);
+      }
     }
     // midpoint on crossLine is also point on normalLine
     const midpoint: Point = {
@@ -42,7 +49,11 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     const normalLine: Line = createNormalLine(crossLine, midpoint);
     console.log('normal line:', normalLine)
     if (isPointOnLine(centerPoint, normalLine)) {
-      candidateLines.push(normalLine);
+      const slope = findLineSlope(normalLine);
+      if (!candidateLineSlopes.has(slope)) {
+        candidateLines.push(normalLine);
+        candidateLineSlopes.add(slope);
+      }
     }
   });
   return candidateLines;
@@ -195,6 +206,16 @@ function isLineHorizontal(line: Line): boolean {
 
 function isLineVertical(line: Line): boolean {
   return line.p1.x === line.p2.x;
+}
+
+// Returns a number or Infinity.
+function findLineSlope(line: Line): number {
+  // Solve line 1 for a, b given two points P1, P2:
+  //   y = ax + b
+  //   a = (P2.y - P1.y) / (P2.x - P1.x)
+  //   b = P2.y - a * P2.x
+  const slope = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
+  return slope;
 }
 
 interface Point {
