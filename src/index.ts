@@ -1,15 +1,22 @@
 main();
 
 function main(): void {
-  // square
-  const points = [
+  console.log('Square');
+  const squarePoints = [
     {x: -1, y: -1},
     {x: 1, y: -1},
     {x: -1, y: 1},
     {x: 1, y: 1},
   ];
-  const symmetryLines = findAllSymmetryLines(points);
-  console.table(symmetryLines);
+  console.table(findAllSymmetryLines(squarePoints));
+
+  console.log('Isosceles triangle');
+  const isoscelesPoints = [
+    {x: -1, y: 0},
+    {x: 0, y: 3},
+    {x: 1, y: 0},
+  ];
+  console.table(findAllSymmetryLines(isoscelesPoints));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
