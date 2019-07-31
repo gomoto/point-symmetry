@@ -33,10 +33,10 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     if (isPointOnLine(centerPoint, crossLine)) {
       candidateLines.push(crossLine);
     }
-    const throughLine: Line = createNormalLine(crossLine);
-    console.log('normal line:', throughLine)
-    if (isPointOnLine(centerPoint, throughLine)) {
-      candidateLines.push(throughLine);
+    const normalLine: Line = createNormalLine(crossLine);
+    console.log('normal line:', normalLine)
+    if (isPointOnLine(centerPoint, normalLine)) {
+      candidateLines.push(normalLine);
     }
   });
   return candidateLines;
