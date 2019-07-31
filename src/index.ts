@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 const EPSILON = 0.000001;
 
 main();
@@ -140,8 +140,8 @@ function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
     const reflectedPoint = reflectPointAcrossLine(point, line);
     return Boolean(points.find((otherPoint) => {
       return (
-        Math.abs(reflectedPoint.x - otherPoint.x) === 0 && // epsilon?
-        Math.abs(reflectedPoint.y - otherPoint.y) === 0 // epsilon?
+        isNearZero(reflectedPoint.x - otherPoint.x) &&
+        isNearZero(reflectedPoint.y - otherPoint.y)
       );
     }));
   });
