@@ -14,6 +14,7 @@ function main(): void {
 
 function findAllSymmetryLines(points: Point[]): Line[] {
   const candidateLines = findCandidateSymmetryLines(points);
+  console.log('candidateLines', candidateLines);
   const symmetryLines = candidateLines.filter((line) => doesLineReflectAllPoints(line, points));
   return symmetryLines;
 }
@@ -46,8 +47,18 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   });
   return candidateLines;
 }
+
 function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
-  return true;
+  // O(N^2)
+  return points.every((point) => {
+    const reflectedPoint = reflectPointAcrossLine(point, line);
+    return Boolean(points.find((otherPoint) => {
+      return (
+        Math.abs(reflectedPoint.x - otherPoint.x) === 0 && // epsilon?
+        Math.abs(reflectedPoint.y - otherPoint.y) === 0 // epsilon?
+      );
+    }));
+  });
 }
 
 // Return list of point pairs, unrepeated.
@@ -111,6 +122,44 @@ function createNormalLine(line: Line, point: Point): Line {
     p2: otherPoint,
   };
   return normalLine;
+}
+
+function reflectPointAcrossLine(point: Point, line: Line): Point {
+  const projectedPoint = projectPointOntoLine(point, line);
+  const dx = projectedPoint.x - point.x;
+  const dy = projectedPoint.y - point.y;
+  const reflectedPoint: Point = {
+    x: point.x + 2 * dx,
+    y: point.y + 2 * dy,
+  };
+  return reflectedPoint;
+}
+
+function projectPointOntoLine(point: Point, line: Line): Point {
+  let intersectionPoint: Point;
+  if (line.p1.y === line.p2.y) { // line is horizontal
+    intersectionPoint = {
+      x: point.x,
+      y: line.p1.y,
+    };
+  } else if (line.p1.x === line.p2.x) { // line is vertical
+    intersectionPoint = {
+      x: line.p1.x,
+      y: point.y,
+    };
+  } else {
+    const normal = createNormalLine(line, point);
+    // intersect lines. lines are guaranteed to intersect because they're normal
+    const lineC1 = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
+    const lineC0 = line.p2.y - lineC1 * line.p2.x;
+    const normalC1 = (normal.p2.y - normal.p1.y) / (normal.p2.x - normal.p1.x);
+    const normalC0 = normal.p2.y - normalC1 * normal.p2.x;
+    intersectionPoint = {
+      x: (normalC0 - lineC0) / (lineC1 - normalC1),
+      y: lineC1 * (normalC0 - lineC0) / (lineC1 - normalC1) + lineC0,
+    };
+  }
+  return intersectionPoint;
 }
 
 interface Point {
