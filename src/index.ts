@@ -61,7 +61,17 @@ function findPointPairs(points: Point[]): MultiPoint[] {
 }
 
 function isPointOnLine(point: MultiPoint, line: Line): boolean {
-  return true;
+  // average point
+  const px = point.points.reduce((sum, point) => sum + point.x, 0);
+  const py = point.points.reduce((sum, point) => sum + point.x, 0);
+  const p: Point = {
+    x: px,
+    y: py,
+  };
+  const diff = (line.a.y - p.y) / (line.a.x - p.x) - (line.b.y - p.y) / (line.b.x - p.x);
+  const isPointOnLine = diff === 0;
+  // console.log(isPointOnLine);
+  return isPointOnLine;
 }
 
 function createNormalLine(line: Line): Line {
