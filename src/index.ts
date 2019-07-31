@@ -27,8 +27,8 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     console.log();
     console.log('pair:', pair);
     const crossLine: Line = {
-      a: pair.points[0],
-      b: pair.points[1],
+      p1: pair.points[0],
+      p2: pair.points[1],
     };
     if (isPointOnLine(centerPoint, crossLine)) {
       candidateLines.push(crossLine);
@@ -71,7 +71,7 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
     x: px,
     y: py,
   };
-  const diff = (line.a.y - p.y) / (line.a.x - p.x) - (line.b.y - p.y) / (line.b.x - p.x);
+  const diff = (line.p1.y - p.y) / (line.p1.x - p.x) - (line.p2.y - p.y) / (line.p2.x - p.x);
   const isPointOnLine = diff === 0; // epsilon?
   // console.log(isPointOnLine);
   return isPointOnLine;
@@ -80,24 +80,24 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
 function createNormalLine(line: Line): Line {
   // midpoint on line is also point on normal line
   const midpoint: Point = {
-    x: (line.a.x + line.b.x) / 2,
-    y: (line.a.y + line.b.y) / 2,
+    x: (line.p1.x + line.p2.x) / 2,
+    y: (line.p1.y + line.p2.y) / 2,
   };
   // other point on normal line should be different from midpoint
   let otherPoint: Point;
-  if (line.a.y === line.b.y) { // line is horizontal
+  if (line.p1.y === line.p2.y) { // line is horizontal
     otherPoint = {
       x: midpoint.x,
       y: midpoint.y + 1,
     };
-  } else if (line.a.x === line.b.x) { // line is vertical
+  } else if (line.p1.x === line.p2.x) { // line is vertical
     otherPoint = {
       x: midpoint.x + 1,
       y: midpoint.y,
     };
   } else {
     // 1st order polynomial coefficient (negative reciprocal of 1st order coefficient of original line)
-    const c1 = (line.a.x - line.b.x) / (line.b.y - line.a.y);
+    const c1 = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
     // 0th order polynomial coefficient
     const c0 = midpoint.y - c1 * midpoint.x;
     otherPoint = {
@@ -106,8 +106,8 @@ function createNormalLine(line: Line): Line {
     };
   }
   const normalLine: Line = {
-    a: midpoint,
-    b: otherPoint,
+    p1: midpoint,
+    p2: otherPoint,
   };
   return normalLine;
 }
@@ -118,8 +118,8 @@ interface Point {
 }
 
 interface Line {
-  a: Point;
-  b: Point;
+  p1: Point;
+  p2: Point;
 }
 
 interface MultiPoint {
