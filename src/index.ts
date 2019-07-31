@@ -26,6 +26,15 @@ function main(): void {
     {x: 3, y: 1},
   ];
   console.table(findAllSymmetryLines(rectanglePoints));
+
+  console.log('Rhombus');
+  const rhombusPoints = [
+    {x: 0, y: 1},
+    {x: 0, y: -1},
+    {x: 1, y: 0},
+    {x: -1, y: 0},
+  ];
+  console.table(findAllSymmetryLines(rhombusPoints));
 }
 
 function findAllSymmetryLines(points: Point[]): Line[] {
@@ -72,6 +81,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
       }
     }
   });
+  console.log('candidate slopes', candidateLineSlopes);
   return candidateLines;
 }
 
@@ -224,14 +234,17 @@ function isLineVertical(line: Line): boolean {
   return line.p1.x === line.p2.x;
 }
 
-// Returns a number or Infinity.
+// Returns a number or Infinity (and never negative Infinity).
 function findLineSlope(line: Line): number {
   // Solve line 1 for a, b given two points P1, P2:
   //   y = ax + b
   //   a = (P2.y - P1.y) / (P2.x - P1.x)
   //   b = P2.y - a * P2.x
   const slope = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-  return slope;
+  if (isFinite(slope)) {
+    return slope;
+  }
+  return Infinity;
 }
 
 interface Point {
