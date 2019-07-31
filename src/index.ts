@@ -33,7 +33,12 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     if (isPointOnLine(centerPoint, crossLine)) {
       candidateLines.push(crossLine);
     }
-    const normalLine: Line = createNormalLine(crossLine);
+    // midpoint on crossLine is also point on normalLine
+    const midpoint: Point = {
+      x: (crossLine.p1.x + crossLine.p2.x) / 2,
+      y: (crossLine.p1.y + crossLine.p2.y) / 2,
+    };
+    const normalLine: Line = createNormalLine(crossLine, midpoint);
     console.log('normal line:', normalLine)
     if (isPointOnLine(centerPoint, normalLine)) {
       candidateLines.push(normalLine);
@@ -77,36 +82,32 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
   return isPointOnLine;
 }
 
-function createNormalLine(line: Line): Line {
-  // midpoint on line is also point on normal line
-  const midpoint: Point = {
-    x: (line.p1.x + line.p2.x) / 2,
-    y: (line.p1.y + line.p2.y) / 2,
-  };
-  // other point on normal line should be different from midpoint
+// Create line perpendicular to given line that passes through given point.
+function createNormalLine(line: Line, point: Point): Line {
+  // other point on normal line should be different from given point
   let otherPoint: Point;
   if (line.p1.y === line.p2.y) { // line is horizontal
     otherPoint = {
-      x: midpoint.x,
-      y: midpoint.y + 1,
+      x: point.x,
+      y: point.y + 1,
     };
   } else if (line.p1.x === line.p2.x) { // line is vertical
     otherPoint = {
-      x: midpoint.x + 1,
-      y: midpoint.y,
+      x: point.x + 1,
+      y: point.y,
     };
   } else {
     // 1st order polynomial coefficient (negative reciprocal of 1st order coefficient of original line)
     const c1 = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
     // 0th order polynomial coefficient
-    const c0 = midpoint.y - c1 * midpoint.x;
+    const c0 = point.y - c1 * point.x;
     otherPoint = {
-      x: midpoint.x + 1,
-      y: c1 * (midpoint.x + 1) + c0,
+      x: point.x + 1,
+      y: c1 * (point.x + 1) + c0,
     };
   }
   const normalLine: Line = {
-    p1: midpoint,
+    p1: point,
     p2: otherPoint,
   };
   return normalLine;
