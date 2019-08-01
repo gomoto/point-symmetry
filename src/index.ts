@@ -291,16 +291,15 @@ function findAllSymmetryLines(points: Point[]): Line[] {
 }
 
 function findCandidateSymmetryLines(points: Point[]): Line[] {
-  const candidateLines: Line[] = [];
+  const lines: Line[] = [];
   const pairs: MultiPoint[] = findPointPairs(points);
   // debug(JSON.stringify(pairs, null, 2));
   const centerPoint: MultiPoint = { points };
   debug('center point', centerPoint);
   // Keep only those lines which:
   // 1. Pass through global center. All lines of symmetry pass through global center.
-  // 2. Have an unencountered slope; there can be only one line
+  // 2. Have a unique slope; there can be only one line
   //    for each slope that also passes through global center.
-  const candidateLineSlopes = new Set<number>();
   pairs.forEach((pair) => {
     debug();
     const crossLine: Line = {
@@ -309,11 +308,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     };
     debug('cross line:', crossLine);
     if (isPointOnLine(centerPoint, crossLine)) {
-      const slope = findLineSlope(crossLine);
-      if (!candidateLineSlopes.has(slope)) {
-        candidateLines.push(crossLine);
-        candidateLineSlopes.add(slope);
-      }
+      lines.push(crossLine);
     }
     // midpoint on crossLine is also point on normalLine
     const midpoint: Point = {
@@ -323,15 +318,30 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     const normalLine: Line = createNormalLine(crossLine, midpoint);
     debug('normal line:', normalLine)
     if (isPointOnLine(centerPoint, normalLine)) {
-      const slope = findLineSlope(normalLine);
-      if (!candidateLineSlopes.has(slope)) {
-        candidateLines.push(normalLine);
-        candidateLineSlopes.add(slope);
-      }
+      lines.push(normalLine);
     }
   });
-  debug('candidate slopes', candidateLineSlopes);
-  return candidateLines;
+  // Deduplicate lines by slope. First sort lines by slope for faster comparisons.
+  const linesSortedBySlope = lines.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
+  // Output lines will also end up sorted by slope.
+  const linesOut: Line[] = [];
+  if (linesSortedBySlope.length === 0) {
+    return linesOut;
+  }
+  // Start with first slope.
+  linesOut.push(linesSortedBySlope[0]);
+  for (let i = 1; i < linesSortedBySlope.length; i++) {
+    const prevLine = linesOut[linesOut.length - 1];
+    const currLine = linesSortedBySlope[i];
+    const prevSlope = findLineSlope(prevLine);
+    const currSlope = findLineSlope(currLine);
+    if (currSlope === prevSlope || isNearZero(currSlope - prevSlope)) {
+      // current and previous line have the same slope
+      continue;
+    }
+    linesOut.push(currLine)
+  }
+  return linesOut;
 }
 
 function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
