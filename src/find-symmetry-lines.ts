@@ -236,16 +236,16 @@ function debug(...args: any[]) {
   }
 }
 
-interface Point {
+export interface Point {
   x: number;
   y: number;
 }
 
-interface Line {
+export interface Line {
   p1: Point;
   p2: Point;
 }
 
-interface MultiPoint {
+export interface MultiPoint {
   points: Point[];
 }
