@@ -208,6 +208,15 @@ function main(): void {
     {x: 5, y: 0},
   ]);
 
+  testSymmetry('Six points, rotated nested equilateral triangles', 0, [
+    {x: -1, y: 0},
+    {x: 0, y: Math.sqrt(3)},
+    {x: 1, y: 0},
+    {x: -3, y: 0},
+    {x: 1, y: 2 * Math.sqrt(3)},
+    {x: 2, y: - Math.sqrt(3)},
+  ]);
+
   testSymmetry('Six points, kite', 1, [
     {x: 0, y: 1},
     {x: 1, y: 0},
