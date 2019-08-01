@@ -7,7 +7,7 @@ function main(): void {
 
   // 2 points
 
-  console.log('Two points:');
+  console.log('Two points (2)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
@@ -15,35 +15,35 @@ function main(): void {
 
   // 3 points
 
-  console.log('Three points in a line, evenly spaced:');
+  console.log('Three points in a line, evenly spaced (2)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
   ]));
 
-  console.log('Three points in a line, unevenly spaced:');
+  console.log('Three points in a line, unevenly spaced (1)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 10, y: 0},
   ]));
 
-  console.log('Scalene triangle:');
+  console.log('Scalene triangle (0)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 1},
     {x: 3, y: 0},
   ]));
 
-  console.log('Isosceles triangle:');
+  console.log('Isosceles triangle (1)');
   console.table(findAllSymmetryLines([
     {x: -1, y: 0},
     {x: 0, y: 3},
     {x: 1, y: 0},
   ]));
 
-  console.log('Equilateral triangle:');
+  console.log('Equilateral triangle (3)');
   console.table(findAllSymmetryLines([
     {x: -1, y: 0},
     {x: 0, y: Math.sqrt(3)},
@@ -52,7 +52,7 @@ function main(): void {
 
   // 4 points
 
-  console.log('Four points in a line, evenly spaced:');
+  console.log('Four points in a line, evenly spaced (2)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
@@ -60,7 +60,7 @@ function main(): void {
     {x: 3, y: 0},
   ]));
 
-  console.log('Four points in a line, unevenly spaced:');
+  console.log('Four points in a line, unevenly spaced (1)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
@@ -68,7 +68,7 @@ function main(): void {
     {x: 10, y: 0},
   ]));
 
-  console.log('Square:');
+  console.log('Square (4)');
   console.table(findAllSymmetryLines([
     {x: -1, y: -1},
     {x: 1, y: -1},
@@ -76,8 +76,7 @@ function main(): void {
     {x: 1, y: 1},
   ]));
 
-  console.log('Four points, equilateral triange plus center point:');
-  console.log('(3)')
+  console.log('Four points, equilateral triange plus center point (3)');
   console.table(findAllSymmetryLines([
     {x: -1, y: 0},
     {x: 0, y: Math.sqrt(3)},
@@ -85,7 +84,7 @@ function main(): void {
     {x: 0, y: Math.sqrt(3) / 3},
   ]));
 
-  console.log('Rectangle:');
+  console.log('Rectangle (2)');
   console.table(findAllSymmetryLines([
     {x: -3, y: -1},
     {x: 3, y: -1},
@@ -93,15 +92,7 @@ function main(): void {
     {x: 3, y: 1},
   ]));
 
-  console.log('Rotated square:');
-  console.table(findAllSymmetryLines([
-    {x: 0, y: 1},
-    {x: 0, y: -1},
-    {x: 1, y: 0},
-    {x: -1, y: 0},
-  ]));
-
-  console.log('Rhombus:');
+  console.log('Rhombus (2)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 1},
     {x: 0, y: -1},
@@ -109,7 +100,7 @@ function main(): void {
     {x: -2, y: 0},
   ]));
 
-  console.log('Kite:');
+  console.log('Kite (1)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 1},
     {x: 1, y: 0},
@@ -117,7 +108,7 @@ function main(): void {
     {x: 0, y: -5},
   ]));
 
-  console.log('Isosceles trapezoid:');
+  console.log('Isosceles trapezoid (1)');
   console.table(findAllSymmetryLines([
     {x: -2, y: 0},
     {x: -1, y: 1},
@@ -125,7 +116,7 @@ function main(): void {
     {x: 2, y: 0},
   ]));
 
-  console.log('Trapezoid:');
+  console.log('Trapezoid (0)');
   console.table(findAllSymmetryLines([
     {x: -2, y: 0},
     {x: -1, y: 1},
@@ -133,7 +124,7 @@ function main(): void {
     {x: 3, y: 0},
   ]));
 
-  console.log('Parallelogram:');
+  console.log('Parallelogram (0)');
   console.table(findAllSymmetryLines([
     {x: -2, y: 0},
     {x: -1, y: 1},
@@ -143,7 +134,7 @@ function main(): void {
 
   // 5 points
 
-  console.log('Five points in a line, evenly spaced:');
+  console.log('Five points in a line, evenly spaced (2)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
@@ -152,7 +143,7 @@ function main(): void {
     {x: 4, y: 0},
   ]));
 
-  console.log('Five points in a line, unevenly spaced:');
+  console.log('Five points in a line, unevenly spaced (0)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
@@ -161,7 +152,7 @@ function main(): void {
     {x: 10, y: 0},
   ]));
 
-  console.log('Pentagon:');
+  console.log('Pentagon (5)');
   const c1 = Math.cos(2 * Math.PI / 5);
   const c2 = Math.cos(Math.PI / 5);
   const s1 = Math.sin(2 * Math.PI / 5);
@@ -174,7 +165,7 @@ function main(): void {
     {x: -c2, y: s2},
   ]));
 
-  console.log('Five points, shaped like a barn:');
+  console.log('Five points, shaped like a barn (1)');
   console.table(findAllSymmetryLines([
     {x: -1, y: 0},
     {x: -1, y: 2},
