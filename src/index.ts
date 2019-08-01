@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 const EPSILON = 0.000001;
 
 main();
@@ -99,6 +99,22 @@ function main(): void {
     {x: -1, y: 1},
     {x: 1, y: 0},
     {x: 2, y: 1},
+  ]));
+
+  // 5 points
+
+  console.log('Pentagon:');
+  const c1 = Math.cos(2 * Math.PI / 5);
+  const c2 = Math.cos(Math.PI / 5);
+  const s1 = Math.sin(2 * Math.PI / 5);
+  const s2 = Math.sin(4 * Math.PI / 5);
+  console.log(c1,c2,s1,s2);
+  console.table(findAllSymmetryLines([
+    {x: 1, y: 0},
+    {x: c1, y: -s1},
+    {x: c1, y: s1},
+    {x: -c2, y: -s2},
+    {x: -c2, y: s2},
   ]));
 }
 
