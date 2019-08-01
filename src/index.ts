@@ -8,253 +8,253 @@ function main(): void {
 
   // 2 points
 
-  logAndCountSymmetryLines('Two points:', [
+  logAndCountSymmetryLines('Two points:', 2, [
     {x: 0, y: 0},
     {x: 1, y: 0},
-  ], 2);
+  ]);
 
 
   // 3 points
 
-  logAndCountSymmetryLines('Three points in a line, evenly spaced', [
+  logAndCountSymmetryLines('Three points in a line, evenly spaced', 2, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Three points in a line, unevenly spaced', [
+  logAndCountSymmetryLines('Three points in a line, unevenly spaced', 1, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 10, y: 0},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Scalene triangle', [
+  logAndCountSymmetryLines('Scalene triangle', 0, [
     {x: 0, y: 0},
     {x: 1, y: 1},
     {x: 3, y: 0},
-  ], 0);
+  ]);
 
-  logAndCountSymmetryLines('Isosceles triangle', [
+  logAndCountSymmetryLines('Isosceles triangle', 1, [
     {x: -1, y: 0},
     {x: 0, y: 3},
     {x: 1, y: 0},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Equilateral triangle', [
+  logAndCountSymmetryLines('Equilateral triangle', 3, [
     {x: -1, y: 0},
     {x: 0, y: Math.sqrt(3)},
     {x: 1, y: 0},
-  ], 3);
+  ]);
 
   // 4 points
 
-  logAndCountSymmetryLines('Four points in a line, evenly spaced', [
+  logAndCountSymmetryLines('Four points in a line, evenly spaced', 2, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 3, y: 0},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Four points in a line, unevenly spaced', [
+  logAndCountSymmetryLines('Four points in a line, unevenly spaced', 1, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 10, y: 0},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Square', [
+  logAndCountSymmetryLines('Square', 4, [
     {x: -1, y: -1},
     {x: 1, y: -1},
     {x: -1, y: 1},
     {x: 1, y: 1},
-  ], 4);
+  ]);
 
-  logAndCountSymmetryLines('Four points, equilateral triange plus center point', [
+  logAndCountSymmetryLines('Four points, equilateral triange plus center point', 3, [
     {x: -1, y: 0},
     {x: 0, y: Math.sqrt(3)},
     {x: 1, y: 0},
     {x: 0, y: Math.sqrt(3) / 3},
-  ], 3);
+  ]);
 
-  logAndCountSymmetryLines('Rectangle', [
+  logAndCountSymmetryLines('Rectangle', 2, [
     {x: -3, y: -1},
     {x: 3, y: -1},
     {x: -3, y: 1},
     {x: 3, y: 1},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Rhombus', [
+  logAndCountSymmetryLines('Rhombus', 2, [
     {x: 0, y: 1},
     {x: 0, y: -1},
     {x: 2, y: 0},
     {x: -2, y: 0},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Kite', [
+  logAndCountSymmetryLines('Kite', 1, [
     {x: 0, y: 1},
     {x: 1, y: 0},
     {x: -1, y: 0},
     {x: 0, y: -4},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Isosceles trapezoid', [
+  logAndCountSymmetryLines('Isosceles trapezoid', 1, [
     {x: -2, y: 0},
     {x: -1, y: 1},
     {x: 1, y: 1},
     {x: 2, y: 0},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Trapezoid', [
+  logAndCountSymmetryLines('Trapezoid', 0, [
     {x: -2, y: 0},
     {x: -1, y: 1},
     {x: 1, y: 1},
     {x: 3, y: 0},
-  ], 0);
+  ]);
 
-  logAndCountSymmetryLines('Parallelogram', [
+  logAndCountSymmetryLines('Parallelogram', 0, [
     {x: -2, y: 0},
     {x: -1, y: 1},
     {x: 1, y: 0},
     {x: 2, y: 1},
-  ], 0);
+  ]);
 
   // 5 points
 
-  logAndCountSymmetryLines('Five points in a line, evenly spaced', [
+  logAndCountSymmetryLines('Five points in a line, evenly spaced', 2, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 3, y: 0},
     {x: 4, y: 0},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Five points in a line, unevenly spaced', [
+  logAndCountSymmetryLines('Five points in a line, unevenly spaced', 1, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 3, y: 0},
     {x: 10, y: 0},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Five points, barn', [
+  logAndCountSymmetryLines('Five points, barn', 1, [
     {x: -1, y: 0},
     {x: -1, y: 2},
     {x: 0, y: 3},
     {x: 1, y: 0},
     {x: 1, y: 2},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Five points, kite', [
+  logAndCountSymmetryLines('Five points, kite', 1, [
     {x: 0, y: 1},
     {x: 1, y: 0},
     {x: -1, y: 0},
     {x: 0, y: -4},
     {x: 0, y: -5},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Five points, rectangle plus center point', [
+  logAndCountSymmetryLines('Five points, rectangle plus center point', 2, [
     {x: 2, y: 1},
     {x: 2, y: -1},
     {x: 0, y: 0},
     {x: -2, y: 1},
     {x: -2, y: -1},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Five points, square plus center point', [
+  logAndCountSymmetryLines('Five points, square plus center point', 4, [
     {x: -1, y: -1},
     {x: 1, y: -1},
     {x: -1, y: 1},
     {x: 1, y: 1},
     {x: 0, y: 0},
-  ], 4);
+  ]);
 
   const c1 = Math.cos(2 * Math.PI / 5);
   const c2 = Math.cos(Math.PI / 5);
   const s1 = Math.sin(2 * Math.PI / 5);
   const s2 = Math.sin(4 * Math.PI / 5);
-  logAndCountSymmetryLines('Five points, regular pentagon', [
+  logAndCountSymmetryLines('Five points, regular pentagon', 5, [
     {x: 1, y: 0},
     {x: c1, y: -s1},
     {x: c1, y: s1},
     {x: -c2, y: -s2},
     {x: -c2, y: s2},
-  ], 5);
+  ]);
 
   // 6 points
 
-  logAndCountSymmetryLines('Six points in a line, evenly spaced', [
+  logAndCountSymmetryLines('Six points in a line, evenly spaced', 2, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 3, y: 0},
     {x: 4, y: 0},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Six points in a line, unevenly spaced', [
+  logAndCountSymmetryLines('Six points in a line, unevenly spaced', 1, [
     {x: 0, y: 0},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 3, y: 0},
     {x: 4, y: 0},
     {x: 10, y: 0},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Six points, irregular', [
+  logAndCountSymmetryLines('Six points, irregular', 0, [
     {x: 0, y: 1},
     {x: 1, y: 0},
     {x: 2, y: 0},
     {x: 3, y: 0},
     {x: 4, y: 0},
     {x: 5, y: 0},
-  ], 0);
+  ]);
 
-  logAndCountSymmetryLines('Six points, kite', [
+  logAndCountSymmetryLines('Six points, kite', 1, [
     {x: 0, y: 1},
     {x: 1, y: 0},
     {x: -1, y: 0},
     {x: 0, y: -4},
     {x: 0, y: -5},
     {x: 0, y: -6},
-  ], 1);
+  ]);
 
-  logAndCountSymmetryLines('Six points, elongated hexagon', [
+  logAndCountSymmetryLines('Six points, elongated hexagon', 2, [
     {x: 2, y: 0},
     {x: 3, y: Math.sqrt(3)},
     {x: -3, y: Math.sqrt(3)},
     {x: -2, y: 0},
     {x: -3, y: -Math.sqrt(3)},
     {x: 3, y: -Math.sqrt(3)},
-  ], 2);
+  ]);
 
-  logAndCountSymmetryLines('Six points, nested equilateral triangles', [
+  logAndCountSymmetryLines('Six points, nested equilateral triangles', 3, [
     {x: -1, y: 0},
     {x: 0, y: Math.sqrt(3)},
     {x: 1, y: 0},
     {x: -2, y: -Math.sqrt(3) / 3},
     {x: 0, y: 5 * Math.sqrt(3) / 3},
     {x: 2, y: -Math.sqrt(3) / 3},
-  ], 3);
+  ]);
 
-  logAndCountSymmetryLines('Six points, regular pentagon plus center point', [
+  logAndCountSymmetryLines('Six points, regular pentagon plus center point', 5, [
     {x: 1, y: 0},
     {x: c1, y: -s1},
     {x: c1, y: s1},
     {x: -c2, y: -s2},
     {x: -c2, y: s2},
     {x: 0, y: 0},
-  ], 5);
+  ]);
 
-  logAndCountSymmetryLines('Six points, regular hexagon', [
+  logAndCountSymmetryLines('Six points, regular hexagon', 6, [
     {x: 2, y: 0},
     {x: 1, y: Math.sqrt(3)},
     {x: -1, y: Math.sqrt(3)},
     {x: -2, y: 0},
     {x: -1, y: -Math.sqrt(3)},
     {x: 1, y: -Math.sqrt(3)},
-  ], 6);
+  ]);
 }
 
-function logAndCountSymmetryLines(message: string, points: Point[], expectedLineCount: number): void {
+function logAndCountSymmetryLines(message: string, expectedLineCount: number, points: Point[]): void {
   console.log(message);
   const lines = findSymmetryLines(points);
   console.table(lines);
