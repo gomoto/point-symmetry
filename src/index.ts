@@ -105,7 +105,7 @@ function main(): void {
     {x: 0, y: 1},
     {x: 1, y: 0},
     {x: -1, y: 0},
-    {x: 0, y: -5},
+    {x: 0, y: -4},
   ]));
 
   console.log('Isosceles trapezoid (1)');
@@ -152,6 +152,42 @@ function main(): void {
     {x: 10, y: 0},
   ]));
 
+  console.log('Five points, barn (1)');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: -1, y: 2},
+    {x: 0, y: 3},
+    {x: 1, y: 0},
+    {x: 1, y: 2},
+  ]));
+
+  console.log('Five points, kite (1)');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 1},
+    {x: 1, y: 0},
+    {x: -1, y: 0},
+    {x: 0, y: -4},
+    {x: 0, y: -5},
+  ]));
+
+  console.log('Five points, rectangle plus center point (2)');
+  console.table(findAllSymmetryLines([
+    {x: 2, y: 1},
+    {x: 2, y: -1},
+    {x: 0, y: 0},
+    {x: -2, y: 1},
+    {x: -2, y: -1},
+  ]));
+
+  console.log('Five points, square plus center point (4)');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: -1},
+    {x: 1, y: -1},
+    {x: -1, y: 1},
+    {x: 1, y: 1},
+    {x: 0, y: 0},
+  ]));
+
   console.log('Pentagon (5)');
   const c1 = Math.cos(2 * Math.PI / 5);
   const c2 = Math.cos(Math.PI / 5);
@@ -163,15 +199,6 @@ function main(): void {
     {x: c1, y: s1},
     {x: -c2, y: -s2},
     {x: -c2, y: s2},
-  ]));
-
-  console.log('Five points, shaped like a barn (1)');
-  console.table(findAllSymmetryLines([
-    {x: -1, y: 0},
-    {x: -1, y: 2},
-    {x: 0, y: 3},
-    {x: 1, y: 0},
-    {x: 1, y: 2},
   ]));
 }
 
