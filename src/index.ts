@@ -4,6 +4,39 @@ const EPSILON = 0.000001;
 main();
 
 function main(): void {
+
+  // 2 points
+
+  console.log('Two points horizontal:');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 0},
+    {x: 1, y: 0},
+  ]));
+
+  console.log('Two points vertical:');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 0},
+    {x: 0, y: 1},
+  ]));
+
+  // 3 points
+
+  console.log('Isosceles triangle:');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: 0, y: 3},
+    {x: 1, y: 0},
+  ]));
+
+  console.log('Equilateral triangle:');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: 0, y: Math.sqrt(3)},
+    {x: 1, y: 0},
+  ]));
+
+  // 4 points
+
   console.log('Square:');
   console.table(findAllSymmetryLines([
     {x: -1, y: -1},
@@ -66,20 +99,6 @@ function main(): void {
     {x: -1, y: 1},
     {x: 1, y: 0},
     {x: 2, y: 1},
-  ]));
-
-  console.log('Isosceles triangle:');
-  console.table(findAllSymmetryLines([
-    {x: -1, y: 0},
-    {x: 0, y: 3},
-    {x: 1, y: 0},
-  ]));
-
-  console.log('Equilateral triangle:');
-  console.table(findAllSymmetryLines([
-    {x: -1, y: 0},
-    {x: 0, y: Math.sqrt(3)},
-    {x: 1, y: 0},
   ]));
 }
 
