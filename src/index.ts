@@ -29,6 +29,13 @@ function main(): void {
     {x: 10, y: 0},
   ]));
 
+  console.log('Scalene triangle:');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 0},
+    {x: 1, y: 1},
+    {x: 3, y: 0},
+  ]));
+
   console.log('Isosceles triangle:');
   console.table(findAllSymmetryLines([
     {x: -1, y: 0},
