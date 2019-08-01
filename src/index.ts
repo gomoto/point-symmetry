@@ -150,13 +150,21 @@ function main(): void {
   const c2 = Math.cos(Math.PI / 5);
   const s1 = Math.sin(2 * Math.PI / 5);
   const s2 = Math.sin(4 * Math.PI / 5);
-  console.log(c1,c2,s1,s2);
   console.table(findAllSymmetryLines([
     {x: 1, y: 0},
     {x: c1, y: -s1},
     {x: c1, y: s1},
     {x: -c2, y: -s2},
     {x: -c2, y: s2},
+  ]));
+
+  console.log('Five points, shaped like a barn:');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: -1, y: 2},
+    {x: 0, y: 3},
+    {x: 1, y: 0},
+    {x: 1, y: 2},
   ]));
 }
 
