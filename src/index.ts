@@ -256,7 +256,30 @@ function main(): void {
 
 function testSymmetry(message: string, expectedLineCount: number, points: Point[]): void {
   console.log(message);
+
+  // Find lines of symmetry for given points.
   const lines = findSymmetryLines(points);
   console.table(lines);
   assert.equal(lines.length, expectedLineCount);
+
+  // Rotate all points about origin for some angle.
+  // The number of symmetry lines should be the same.
+  const rotatedPoints = rotatePoints(points, 1);
+  const rotatedLines = findSymmetryLines(rotatedPoints);
+  console.table(rotatedLines);
+  assert.equal(rotatedLines.length, expectedLineCount);
+}
+
+function rotatePoints(points: Point[], radians: number): Point[] {
+  // ⎡ cosθ -sinθ ⎤  ⎡ x ⎤   ⎡ xcosθ - ysinθ ⎤
+  // ⎢            ⎥  ⎢   ⎥ = ⎢               ⎥
+  // ⎣ sinθ  cosθ ⎦  ⎣ y ⎦   ⎣ xsinθ + ycosθ ⎦
+  const pointsOut = points.map((point) => {
+    const pointOut: Point = {
+      x: point.x * Math.cos(radians) - point.y * Math.sin(radians),
+      y: point.x * Math.sin(radians) + point.y * Math.cos(radians),
+    };
+    return pointOut;
+  });
+  return pointsOut;
 }
