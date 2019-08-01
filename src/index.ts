@@ -143,7 +143,7 @@ function main(): void {
     {x: 4, y: 0},
   ]));
 
-  console.log('Five points in a line, unevenly spaced (0)');
+  console.log('Five points in a line, unevenly spaced (1)');
   console.table(findAllSymmetryLines([
     {x: 0, y: 0},
     {x: 1, y: 0},
@@ -188,7 +188,7 @@ function main(): void {
     {x: 0, y: 0},
   ]));
 
-  console.log('Pentagon (5)');
+  console.log('Five points, regular pentagon (5)');
   const c1 = Math.cos(2 * Math.PI / 5);
   const c2 = Math.cos(Math.PI / 5);
   const s1 = Math.sin(2 * Math.PI / 5);
@@ -199,6 +199,87 @@ function main(): void {
     {x: c1, y: s1},
     {x: -c2, y: -s2},
     {x: -c2, y: s2},
+  ]));
+
+  // 6 points
+
+  console.log('Six points in a line, evenly spaced (2)');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 0},
+    {x: 1, y: 0},
+    {x: 2, y: 0},
+    {x: 3, y: 0},
+    {x: 4, y: 0},
+  ]));
+
+  console.log('Six points in a line, unevenly spaced (1)');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 0},
+    {x: 1, y: 0},
+    {x: 2, y: 0},
+    {x: 3, y: 0},
+    {x: 4, y: 0},
+    {x: 10, y: 0},
+  ]));
+
+  console.log('Six points, irregular (0)');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 1},
+    {x: 1, y: 0},
+    {x: 2, y: 0},
+    {x: 3, y: 0},
+    {x: 4, y: 0},
+    {x: 5, y: 0},
+  ]));
+
+  console.log('Six points, kite (1)');
+  console.table(findAllSymmetryLines([
+    {x: 0, y: 1},
+    {x: 1, y: 0},
+    {x: -1, y: 0},
+    {x: 0, y: -4},
+    {x: 0, y: -5},
+    {x: 0, y: -6},
+  ]));
+
+  console.log('Six points, elongated hexagon (2)');
+  console.table(findAllSymmetryLines([
+    {x: 2, y: 0},
+    {x: 3, y: Math.sqrt(3)},
+    {x: -3, y: Math.sqrt(3)},
+    {x: -2, y: 0},
+    {x: -3, y: -Math.sqrt(3)},
+    {x: 3, y: -Math.sqrt(3)},
+  ]));
+
+  console.log('Six points, nested equilateral triangles (3)');
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: 0, y: Math.sqrt(3)},
+    {x: 1, y: 0},
+    {x: -2, y: -Math.sqrt(3) / 3},
+    {x: 0, y: 5 * Math.sqrt(3) / 3},
+    {x: 2, y: -Math.sqrt(3) / 3},
+  ]));
+
+  console.log('Six points, regular pentagon plus center point (5)');
+  console.table(findAllSymmetryLines([
+    {x: 1, y: 0},
+    {x: c1, y: -s1},
+    {x: c1, y: s1},
+    {x: -c2, y: -s2},
+    {x: -c2, y: s2},
+    {x: 0, y: 0},
+  ]));
+
+  console.log('Six points, regular hexagon (6)');
+  console.table(findAllSymmetryLines([
+    {x: 2, y: 0},
+    {x: 1, y: Math.sqrt(3)},
+    {x: -1, y: Math.sqrt(3)},
+    {x: -2, y: 0},
+    {x: -1, y: -Math.sqrt(3)},
+    {x: 1, y: -Math.sqrt(3)},
   ]));
 }
 
