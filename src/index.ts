@@ -76,6 +76,15 @@ function main(): void {
     {x: 1, y: 1},
   ]));
 
+  console.log('Four points, equilateral triange plus center point:');
+  console.log('(3)')
+  console.table(findAllSymmetryLines([
+    {x: -1, y: 0},
+    {x: 0, y: Math.sqrt(3)},
+    {x: 1, y: 0},
+    {x: 0, y: Math.sqrt(3) / 3},
+  ]));
+
   console.log('Rectangle:');
   console.table(findAllSymmetryLines([
     {x: -3, y: -1},
