@@ -20,9 +20,8 @@ export function findSymmetryLines(points: Point[]): Line[] {
 
 function findCandidateSymmetryLines(points: Point[]): Line[] {
   const lines: Line[] = [];
-  const pairs: MultiPoint[] = findPointPairs(points);
-  // debug(JSON.stringify(pairs, null, 2));
-  const centerPoint: MultiPoint = { points };
+  const pairs = findPointPairs(points);
+  const centerPoint = findCenterPoint(points);
   debug('center point', centerPoint);
   // Keep only those lines which:
   // 1. Pass through global center. All lines of symmetry pass through global center.
@@ -31,8 +30,8 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   pairs.forEach((pair) => {
     debug();
     const crossLine: Line = {
-      p1: pair.points[0],
-      p2: pair.points[1],
+      p1: pair[0],
+      p2: pair[1],
     };
     debug('cross line:', crossLine);
     if (isPointOnLine(centerPoint, crossLine)) {
@@ -90,48 +89,51 @@ function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
 }
 
 // Return list of point pairs, unrepeated.
-function findPointPairs(points: Point[]): MultiPoint[] {
+function findPointPairs(points: Point[]): [Point, Point][] {
   // N choose 2
-  const pairs: MultiPoint[] = [];
+  const pairs: [Point, Point][] = [];
   for (let p = 0; p < points.length - 1; p++) {
     for (let q = p + 1; q < points.length; q++) {
-      const pair = {
-        points: [
-          points[p],
-          points[q],
-        ],
-      };
+      const pair: [Point, Point] = [
+        points[p],
+        points[q],
+      ];
       pairs.push(pair);
     }
   }
   return pairs;
 }
 
-function isPointOnLine(point: MultiPoint, line: Line): boolean {
+// Return the average point for a set of points.
+function findCenterPoint(points: Point[]): Point {
   // average point
-  const px = point.points.reduce((sum, point) => sum + point.x, 0) / point.points.length;
-  const py = point.points.reduce((sum, point) => sum + point.y, 0) / point.points.length;
+  const px = points.reduce((sum, point) => sum + point.x, 0) / points.length;
+  const py = points.reduce((sum, point) => sum + point.y, 0) / points.length;
   const p: Point = {
     x: px,
     y: py,
   };
-  debug('is point on line?', p, line);
+  return p;
+}
+
+function isPointOnLine(point: Point, line: Line): boolean {
+  debug('is point on line?', point, line);
   let isPointOnLine: boolean;
   if (isLineHorizontal(line)) {
-    isPointOnLine = isNearZero(p.y - line.p1.y);
+    isPointOnLine = isNearZero(point.y - line.p1.y);
   } else if (isLineVertical(line)) {
-    isPointOnLine = isNearZero(p.x - line.p1.x);
+    isPointOnLine = isNearZero(point.x - line.p1.x);
   } else {
     const slope = findLineSlope(line);
     debug('slope', slope);
     if (-1 < slope && slope < 1) {
-      const y = calculateLineY(line, p.x);
-      debug('last case', y, p.y);
-      isPointOnLine = isNearZero(y - p.y);
+      const y = calculateLineY(line, point.x);
+      debug('last case', y, point.y);
+      isPointOnLine = isNearZero(y - point.y);
     } else {
-      const x = calculateLineX(line, p.y);
-      debug('last case', x, p.x);
-      isPointOnLine = isNearZero(x - p.x);
+      const x = calculateLineX(line, point.y);
+      debug('last case', x, point.x);
+      isPointOnLine = isNearZero(x - point.x);
     }
   }
   return isPointOnLine;
@@ -344,8 +346,4 @@ export interface Line {
   // A line is defined by two points, which should not be the same.
   p1: Point;
   p2: Point;
-}
-
-export interface MultiPoint {
-  points: Point[];
 }
