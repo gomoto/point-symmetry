@@ -165,12 +165,12 @@ function createNormalLine(line: Line, point: Point): Line {
     //   b' = P3.y - a' * P3.x
 
     // 1st order polynomial coefficient, a'
-    const c1 = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
+    const a = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
     // 0th order polynomial coefficient, b'
-    const c0 = point.y - c1 * point.x;
+    const b = point.y - a * point.x;
     otherPoint = {
       x: point.x + 1,
-      y: c1 * (point.x + 1) + c0,
+      y: a * (point.x + 1) + b,
     };
   }
   const normalLine: Line = {
@@ -212,13 +212,13 @@ function projectPointOntoLine(point: Point, line: Line): Point {
     //   ---
     //   x = (b' - b) / (a - a')
     //   y = a * (b' - b) / (a - a') + b
-    const lineC1 = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-    const lineC0 = line.p2.y - lineC1 * line.p2.x;
-    const normalC1 = (normal.p2.y - normal.p1.y) / (normal.p2.x - normal.p1.x);
-    const normalC0 = normal.p2.y - normalC1 * normal.p2.x;
+    const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
+    const b = line.p2.y - a * line.p2.x;
+    const aPrime = (normal.p2.y - normal.p1.y) / (normal.p2.x - normal.p1.x);
+    const bPrime = normal.p2.y - aPrime * normal.p2.x;
     intersectionPoint = {
-      x: (normalC0 - lineC0) / (lineC1 - normalC1),
-      y: lineC1 * (normalC0 - lineC0) / (lineC1 - normalC1) + lineC0,
+      x: (bPrime - b) / (a - aPrime),
+      y: a * (bPrime - b) / (a - aPrime) + b,
     };
   }
   return intersectionPoint;
