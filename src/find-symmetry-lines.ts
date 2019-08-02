@@ -121,10 +121,6 @@ function isPointOnLine(point: MultiPoint, line: Line): boolean {
     isPointOnLine = isNearZero(p.y - line.p1.y);
   } else if (isLineVertical(line)) {
     isPointOnLine = isNearZero(p.x - line.p1.x);
-  } else if (line.p1.x === p.x) { // check if p is p1
-    isPointOnLine = isNearZero(line.p1.y - p.y);
-  } else if (line.p2.x === p.x) { // check if p is p2
-    isPointOnLine = isNearZero(line.p2.y - p.y);
   } else {
     const slope = findLineSlope(line);
     debug('slope', slope);
