@@ -338,3 +338,27 @@ export interface Line {
   p1: Point;
   p2: Point;
 }
+
+// Used in tests. Consider refactoring.
+export function linesUnique(lines: Line[]): boolean {
+  if (lines.length === 0) {
+    return true;
+  }
+  const sortedLines = lines.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
+  for (let i = 1; i < sortedLines.length; i++) {
+    const prevLine = sortedLines[i - 1];
+    const currLine = sortedLines[i];
+    if (isColinear(prevLine, currLine)) {
+      return false;
+    }
+  }
+  // First and last lines might both be vertical.
+  if (sortedLines.length > 1) {
+    const firstLine = sortedLines[0];
+    const lastLine = sortedLines[sortedLines.length - 1];
+    if (isColinear(firstLine, lastLine)) {
+      return false;
+    }
+  }
+  return true;
+}

@@ -1,4 +1,4 @@
-import { findSymmetryLines } from './find-symmetry-lines';
+import { findSymmetryLines, linesUnique } from './find-symmetry-lines';
 import { strict as assert } from 'assert';
 import { Point } from './find-symmetry-lines';
 
@@ -329,6 +329,7 @@ function testPoints(expectedLineCount: number, points: Point[]): void {
   const lines = findSymmetryLines(points);
   console.table(lines);
   assert.equal(lines.length, expectedLineCount);
+  assert.ok(linesUnique(lines));
 }
 
 function rotatePoints(points: Point[], radians: number): Point[] {
