@@ -168,6 +168,15 @@ function main(): void {
     {x: 0, y: 0},
   ]);
 
+  // Testing lines with large but non-infinite slopes
+  testSymmetry('Five points, square plus center point, rotated and slightly askew', 4, [
+    {x: 1, y: 0},
+    {x: 1e-8, y: 1}, // large positive slope for line through this point and center point
+    {x: -1, y: 0},
+    {x: 1e-8, y: -1}, // large negative slope for line through this point and center point
+    {x: 0, y: 0}, // center point
+  ]);
+
   const c1 = Math.cos(2 * Math.PI / 5);
   const c2 = Math.cos(Math.PI / 5);
   const s1 = Math.sin(2 * Math.PI / 5);
@@ -264,6 +273,9 @@ function main(): void {
 }
 
 function testSymmetry(message: string, expectedLineCount: number, points: Point[]): void {
+  console.log();
+  console.log('--------');
+  console.log();
   console.log(message);
 
   // Find lines of symmetry for given points.

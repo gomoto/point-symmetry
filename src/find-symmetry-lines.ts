@@ -3,7 +3,7 @@ const DEBUG = true;
 
 // Error tolerance in distance unit.
 // Do not use for tolerance in line coefficient units.
-const EPSILON = 0.000001;
+const EPSILON = 1e-4;
 
 // x and y bounds used in colinearity checks
 const X_LOWER_BOUND = -1000;
@@ -18,6 +18,7 @@ export function findSymmetryLines(points: Point[]): Line[] {
   return symmetryLines;
 }
 
+// Find unique candidate lines of symmetry.
 function findCandidateSymmetryLines(points: Point[]): Line[] {
   const lines: Line[] = [];
   const pairs = findPointPairs(points);
@@ -53,25 +54,37 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   // Deduplicate lines by slope. First sort lines by slope for faster comparisons.
   const linesSortedBySlope = lines.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
   debug(`Candidate lines, sorted, unfiltered (${linesSortedBySlope.length}):`, linesSortedBySlope);
+  debug('Candidate line slopes, sorted, unfiltered:', linesSortedBySlope.map((line) => findLineSlope(line)));
   // Output lines will also end up sorted by slope.
   const linesOut: Line[] = [];
   if (linesSortedBySlope.length === 0) {
     return linesOut;
   }
-  // Start with first slope.
+  // Always take first line.
   linesOut.push(linesSortedBySlope[0]);
+  // Handle all lines except last.
   for (let i = 1; i < linesSortedBySlope.length; i++) {
+    const firstLine = linesOut[0];
     const prevLine = linesOut[linesOut.length - 1];
     const currLine = linesSortedBySlope[i];
     debug('Comparing lines:', prevLine, currLine);
-    const areLinesColinear = isColinear(prevLine, currLine);
-    debug('Are lines are colinear?', areLinesColinear);
-    if (areLinesColinear) {
+    const isColinearWithPreviousLine = isColinear(prevLine, currLine);
+    debug('Current and previous lines colinear?', isColinearWithPreviousLine);
+    if (isColinearWithPreviousLine) {
       // current and previous line are the same
+      continue;
+    }
+    // Other than the previous line, the first line can be colinear with the current line
+    // if both are vertical lines, with slopes -/+Infinity.
+    const isColinearWithFirstLine = isColinear(firstLine, currLine);
+    debug('Current and first lines colinear?', isColinearWithFirstLine);
+    if (isColinearWithFirstLine) {
+      // current and first line are the same
       continue;
     }
     linesOut.push(currLine)
   }
+  debug('candidate line slopes:', linesOut.map((line) => findLineSlope(line)));
   return linesOut;
 }
 
@@ -253,9 +266,9 @@ function isColinear(line1: Line, line2: Line): boolean {
   } else if (isLineVertical(line1)) {
     isColinear = isLineVertical(line2) && isNearZero(line1.p1.x - line2.p1.x);
   } else if (isLineHorizontal(line2)) {
-    return false;
+    isColinear = isLineHorizontal(line1) && isNearZero(line1.p1.y - line2.p1.y);
   } else if (isLineVertical(line2)) {
-    return false;
+    isColinear = isLineVertical(line1) && isNearZero(line1.p1.x - line2.p1.x);
   } else {
     // By this point, Lines 1 and 2 are guaranteed not to be horizontal or vertical.
     // calculateLine functions will never throw.
