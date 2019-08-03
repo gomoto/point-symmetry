@@ -277,16 +277,12 @@ function isColinear(line1: Line, line2: Line): boolean {
     const slope1 = findLineSlope(line1);
     if (-1 < slope1 && slope1 < 1) {
       // use x bounds to compute y
-      try {
-        const y1line1 = calculateLineY(line1, X_LOWER_BOUND);
-        const y1line2 = calculateLineY(line2, X_LOWER_BOUND);
-        const y2line1 = calculateLineY(line1, X_UPPER_BOUND);
-        const y2line2 = calculateLineY(line2, X_UPPER_BOUND);
-        // lines are colinear if each pair of points are the same (within error tolerance)
-        isColinear = isNearZero(y1line1 - y1line2) && isNearZero(y2line1 - y2line2);
-      } catch (e) {
-        isColinear = false;
-      }
+      const y1line1 = calculateLineY(line1, X_LOWER_BOUND);
+      const y1line2 = calculateLineY(line2, X_LOWER_BOUND);
+      const y2line1 = calculateLineY(line1, X_UPPER_BOUND);
+      const y2line2 = calculateLineY(line2, X_UPPER_BOUND);
+      // lines are colinear if each pair of points are the same (within error tolerance)
+      isColinear = isNearZero(y1line1 - y1line2) && isNearZero(y2line1 - y2line2);
     } else {
       // use y bounds to compute x
       const x1line1 = calculateLineX(line1, Y_LOWER_BOUND);
