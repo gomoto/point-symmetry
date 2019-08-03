@@ -283,19 +283,11 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   // The number of symmetry lines should be the same
   // for all rotations of this point configuration.
   const rotations: number[] = [
-    - 2 * Math.PI, // -360°
-    - (3 / 2) * Math.PI, // -270°
-    - Math.PI, // -180°
-    - (2 / 3) * Math.PI, // -120°
-    - (1 / 2) * Math.PI, // -90°
-    - (1 / 3) * Math.PI, // -60°
-    - (1 / 6) * Math.PI, // -30°
-    - 2, // -114.59156...°
-    - 1, // -57.29578...°
     0, // 0°
     1, // 57.29578...°
     2, // 114.59156...°
     (1 / 6) * Math.PI, // 30°
+    (1 / 4) * Math.PI, // 45°
     (1 / 3) * Math.PI, // 60°
     (1 / 2) * Math.PI, // 90°
     (2 / 3) * Math.PI, // 120°
@@ -304,9 +296,25 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     2 * Math.PI, // 360°
   ];
 
-  rotations.forEach((rotation) => {
-    const rotatedPoints = rotatePoints(points, rotation);
-    testPoints(expectedLineCount, rotatedPoints);
+  const translations: Point[] = [
+    {x: 0, y: 0},
+    createUnitCircleTranslation(0), // 0°
+    createUnitCircleTranslation(Math.PI / 6), // 30°
+    createUnitCircleTranslation(Math.PI / 4), // 45°
+    createUnitCircleTranslation(Math.PI / 3), // 60°
+    createUnitCircleTranslation(Math.PI / 2), // 90°
+    createUnitCircleTranslation((2 / 3) * Math.PI), // 120°
+    createUnitCircleTranslation(Math.PI), // 180°
+    createUnitCircleTranslation((3 / 2) * Math.PI), // 270°
+    createUnitCircleTranslation(2 * Math.PI), // 360°
+  ];
+
+  translations.forEach((translation) => {
+    const translatedPoints = translatePoints(points, translation);
+    rotations.forEach((rotation) => {
+      const translatedRotatedPoints = rotatePoints(translatedPoints, rotation);
+      testPoints(expectedLineCount, translatedRotatedPoints);
+    });
   });
 }
 
@@ -322,12 +330,32 @@ function rotatePoints(points: Point[], radians: number): Point[] {
   // ⎡ cosθ -sinθ ⎤  ⎡ x ⎤   ⎡ xcosθ - ysinθ ⎤
   // ⎢            ⎥  ⎢   ⎥ = ⎢               ⎥
   // ⎣ sinθ  cosθ ⎦  ⎣ y ⎦   ⎣ xsinθ + ycosθ ⎦
-  const pointsOut = points.map((point) => {
-    const pointOut: Point = {
+  const rotatedPoints = points.map((point) => {
+    const rotatedPoint: Point = {
       x: point.x * Math.cos(radians) - point.y * Math.sin(radians),
       y: point.x * Math.sin(radians) + point.y * Math.cos(radians),
     };
-    return pointOut;
+    return rotatedPoint;
   });
-  return pointsOut;
+  return rotatedPoints;
+}
+
+function translatePoints(points: Point[], translation: Point): Point[] {
+  const translatedPoints = points.map((point) => {
+    const translatedPoint: Point = {
+      x: point.x + translation.x,
+      y: point.y + translation.y,
+    };
+    return translatedPoint;
+  });
+  return translatedPoints;
+}
+
+// Return point on the unit circle at the specified angle in radians.
+function createUnitCircleTranslation(radians: number): Point {
+  const translation: Point = {
+    x: Math.cos(radians),
+    y: Math.sin(radians),
+  };
+  return translation;
 }
