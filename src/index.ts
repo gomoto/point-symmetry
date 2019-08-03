@@ -279,18 +279,19 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   console.log(message);
   console.log();
 
-  // Find lines of symmetry for given points.
-  testPoints(expectedLineCount, points);
+  // List of rotations (radians) to test.
+  // The number of symmetry lines should be the same
+  // for all rotations of this point configuration.
+  const rotations: number[] = [
+    0,
+    1,
+    Math.PI / 2, // 90°
+  ];
 
-  // Rotate all points about origin by 90 degrees.
-  // The number of symmetry lines should be the same.
-  const rotatedPoints1 = rotatePoints(points, Math.PI / 2);
-  testPoints(expectedLineCount, rotatedPoints1);
-
-  // Rotate all points about origin for some angle.
-  // The number of symmetry lines should be the same.
-  const rotatedPoints2 = rotatePoints(points, 1);
-  testPoints(expectedLineCount, rotatedPoints2);
+  rotations.forEach((rotation) => {
+    const rotatedPoints = rotatePoints(points, rotation);
+    testPoints(expectedLineCount, rotatedPoints);
+  });
 }
 
 function testPoints(expectedLineCount: number, points: Point[]): void {
