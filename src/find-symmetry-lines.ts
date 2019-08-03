@@ -296,42 +296,29 @@ function isColinear(line1: Line, line2: Line): boolean {
   return isColinear;
 }
 
-// Calculate x given y. Throw if line is horizontal (no x).
+// Calculate x given y.
 function calculateLineX(line: Line, y: number): number {
-  if (isLineHorizontal(line)) {
-    throw new Error('Cannot calculate x for any y on a horizontal line');
-  } else if (isLineVertical(line)) {
-    return line.p1.x;
-  } else {
-    // Solve for a, b given two points P1, P2:
-    //   y = ax + b
-    //   a = (P2.y - P1.y) / (P2.x - P1.x)
-    //   b = P2.y - a * P2.x
-    //   x = (y - b) / a
-    const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-    const b = line.p2.y - a * line.p2.x;
-    const x = (y - b) / a;
-    return x;
-  }
+  // Solve for a, b given two points P1, P2:
+  //   y = ax + b
+  //   a = (P2.y - P1.y) / (P2.x - P1.x)
+  //   b = P2.y - a * P2.x
+  //   x = (y - b) / a
+  const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
+  const b = line.p2.y - a * line.p2.x;
+  const x = (y - b) / a;
+  return x;
 }
 
-// Calculate y given x. Throw if line is vertical (no y).
+// Calculate y given x.
 function calculateLineY(line: Line, x: number): number {
-  if (isLineHorizontal(line)) {
-    return line.p1.y;
-  } else if (isLineVertical(line)) {
-    throw new Error('Cannot calculate y for any x on a vertical line');
-  } else {
-    // Solve for a, b given two points P1, P2:
-    //   y = ax + b
-    //   a = (P2.y - P1.y) / (P2.x - P1.x)
-    //   b = P2.y - a * P2.x
-    const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-    const b = line.p2.y - a * line.p2.x;
-    debug(line.p2.x, line.p2.y, a, b, x);
-    const y = a * x + b;
-    return y;
-  }
+  // Solve for a, b given two points P1, P2:
+  //   y = ax + b
+  //   a = (P2.y - P1.y) / (P2.x - P1.x)
+  //   b = P2.y - a * P2.x
+  const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
+  const b = line.p2.y - a * line.p2.x;
+  const y = a * x + b;
+  return y;
 }
 
 // Determine if a number is "zero" or less than some small value epsilon.
