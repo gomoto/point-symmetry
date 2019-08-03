@@ -127,27 +127,20 @@ function findCenterPoint(points: Point[]): Point {
   return p;
 }
 
+// Is the point on the line?
 function isPointOnLine(point: Point, line: Line): boolean {
-  debug('is point on line?', point, line);
-  let isPointOnLine: boolean;
-  if (isLineHorizontal(line)) {
-    isPointOnLine = isNearZero(point.y - line.p1.y);
-  } else if (isLineVertical(line)) {
-    isPointOnLine = isNearZero(point.x - line.p1.x);
-  } else {
-    const slope = findLineSlope(line);
-    debug('slope', slope);
-    if (-1 < slope && slope < 1) {
-      const y = calculateLineY(line, point.x);
-      debug('last case', y, point.y);
-      isPointOnLine = isNearZero(y - point.y);
-    } else {
-      const x = calculateLineX(line, point.y);
-      debug('last case', x, point.x);
-      isPointOnLine = isNearZero(x - point.x);
-    }
+  // Point is on line if:
+  // at point's x, point's y equals line's y (within error tolerance)
+  // or a point's y, point's x equals line's x (within error tolerance).
+  const y = calculateLineY(line, point.x);
+  if (isNearZero(y - point.y)) {
+    return true;
   }
-  return isPointOnLine;
+  const x = calculateLineX(line, point.y);
+  if (isNearZero(x - point.x)) {
+    return true;
+  }
+  return false;
 }
 
 // Create line perpendicular to given line that passes through given point.
