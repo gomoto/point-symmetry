@@ -277,25 +277,28 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   console.log('--------');
   console.log();
   console.log(message);
+  console.log();
 
   // Find lines of symmetry for given points.
-  const lines = findSymmetryLines(points);
-  console.table(lines);
-  assert.equal(lines.length, expectedLineCount);
+  testPoints(expectedLineCount, points);
 
   // Rotate all points about origin by 90 degrees.
   // The number of symmetry lines should be the same.
   const rotatedPoints1 = rotatePoints(points, Math.PI / 2);
-  const rotatedLines1 = findSymmetryLines(rotatedPoints1);
-  console.table(rotatedLines1);
-  assert.equal(rotatedLines1.length, expectedLineCount);
+  testPoints(expectedLineCount, rotatedPoints1);
 
   // Rotate all points about origin for some angle.
   // The number of symmetry lines should be the same.
   const rotatedPoints2 = rotatePoints(points, 1);
-  const rotatedLines2 = findSymmetryLines(rotatedPoints2);
-  console.table(rotatedLines2);
-  assert.equal(rotatedLines2.length, expectedLineCount);
+  testPoints(expectedLineCount, rotatedPoints2);
+}
+
+function testPoints(expectedLineCount: number, points: Point[]): void {
+  console.log('Points:');
+  console.log(points);
+  const lines = findSymmetryLines(points);
+  console.table(lines);
+  assert.equal(lines.length, expectedLineCount);
 }
 
 function rotatePoints(points: Point[], radians: number): Point[] {
