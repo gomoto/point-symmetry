@@ -217,7 +217,7 @@ function main(): void {
     {x: 5, y: 0},
   ]);
 
-  testSymmetry('Six points, rotated nested equilateral triangles', 0, [
+  testSymmetry('Six points, nested equilateral triangles, one rotated 30 degrees (rotational symmetry but no reflectional symmetry)', 0, [
     {x: -1, y: 0},
     {x: 0, y: Math.sqrt(3)},
     {x: 1, y: 0},
