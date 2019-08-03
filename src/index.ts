@@ -309,10 +309,12 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     createUnitCircleTranslation(2 * Math.PI), // 360°
   ];
 
+  let testCounter: number = 0;
   translations.forEach((translation) => {
     const translatedPoints = translatePoints(points, translation);
     rotations.forEach((rotation) => {
       const translatedRotatedPoints = rotatePoints(translatedPoints, rotation);
+      console.log(`Test #${++testCounter}`);
       testPoints(expectedLineCount, translatedRotatedPoints);
     });
   });
