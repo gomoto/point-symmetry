@@ -14,7 +14,8 @@ const Y_UPPER_BOUND = 1000;
 export function findSymmetryLines(points: Point[]): Line[] {
   const candidateLines = findCandidateSymmetryLines(points);
   debug(() => {
-    console.log('candidateLines', candidateLines);
+    console.log('Candidate lines:');
+    console.table(candidateLines);
   });
   const symmetryLines = candidateLines.filter((line) => doesLineReflectAllPoints(line, points));
   return symmetryLines;
@@ -25,28 +26,16 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   const lines: Line[] = [];
   const pairs = findPointPairs(points);
   const centerPoint = findCenterPoint(points);
-  debug(() => {
-    console.log('center point', centerPoint);
-  });
   // Keep only those lines which:
   // 1. Pass through global center. All lines of symmetry pass through global center.
   // 2. Have a unique slope (within error tolerance); there can be only one line
   //    for each slope that also passes through global center.
   pairs.forEach((pair) => {
-    debug(() => {
-      console.log();
-    });
     const crossLine: Line = {
       p1: pair[0],
       p2: pair[1],
     };
-    debug(() => {
-      console.log('cross line:', crossLine);
-    });
     if (isPointOnLine(centerPoint, crossLine)) {
-      debug(() => {
-        console.log('center point is on cross line');
-      });
       lines.push(crossLine);
     }
     // midpoint on crossLine is also point on normalLine
@@ -55,23 +44,21 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
       y: (crossLine.p1.y + crossLine.p2.y) / 2,
     };
     const normalLine: Line = createNormalLine(crossLine, midpoint);
-    debug(() => {
-      console.log('normal line:', normalLine);
-    });
     if (isPointOnLine(centerPoint, normalLine)) {
-      debug(() => {
-        console.log('center point is on normal line');
-      });
       lines.push(normalLine);
     }
+  });
+  debug(() => {
+    console.log('Unfiltered candidates:');
+    console.table(lines);
   });
   // Deduplicate lines by slope. First sort lines by slope for faster comparisons.
   const linesSortedBySlope = lines.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
   debug(() => {
-    console.log(`Candidate lines, sorted, unfiltered (${linesSortedBySlope.length}):`, linesSortedBySlope);
-  });
-  debug(() => {
-    console.log('Candidate line slopes, sorted, unfiltered:', linesSortedBySlope.map((line) => findLineSlope(line)));
+    console.log('Sorted candidates');
+    console.table(linesSortedBySlope);
+    console.log('Sorted candidate slopes');
+    console.table(linesSortedBySlope.map((line) => findLineSlope(line)));
   });
   // Output lines will also end up sorted by slope.
   const linesOut: Line[] = [];
@@ -86,13 +73,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   for (let i = 1; i < linesSortedBySlope.length; i++) {
     const prevLine = linesOut[linesOut.length - 1];
     const currLine = linesSortedBySlope[i];
-    debug(() => {
-      console.log('Comparing lines:', prevLine, currLine);
-    });
     const linesCoincideWithPreviousLine = linesCoincide(prevLine, currLine);
-    debug(() => {
-      console.log('Current and previous lines coincident?', linesCoincideWithPreviousLine);
-    });
     if (linesCoincideWithPreviousLine) {
       continue;
     }
@@ -104,9 +85,6 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   if (linesOut.length > 1 && linesCoincide(firstLine, lastLine)) {
     linesOut.pop();
   }
-  debug(() => {
-    console.log('candidate line slopes:', linesOut.map((line) => findLineSlope(line)));
-  });
   return linesOut;
 }
 
