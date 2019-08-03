@@ -61,28 +61,26 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     return linesOut;
   }
   // Always take first line.
-  linesOut.push(linesSortedBySlope[0]);
-  // Handle all lines except last.
+  const firstLine = linesSortedBySlope[0];
+  linesOut.push(firstLine);
+  // Add each subsequent line unless it is colinear with the previous line.
+  // Only need to check previous line because lines are sorted by slope.
   for (let i = 1; i < linesSortedBySlope.length; i++) {
-    const firstLine = linesOut[0];
     const prevLine = linesOut[linesOut.length - 1];
     const currLine = linesSortedBySlope[i];
     debug('Comparing lines:', prevLine, currLine);
     const isColinearWithPreviousLine = isColinear(prevLine, currLine);
     debug('Current and previous lines colinear?', isColinearWithPreviousLine);
     if (isColinearWithPreviousLine) {
-      // current and previous line are the same
-      continue;
-    }
-    // Other than the previous line, the first line can be colinear with the current line
-    // if both are vertical lines, with slopes -/+Infinity.
-    const isColinearWithFirstLine = isColinear(firstLine, currLine);
-    debug('Current and first lines colinear?', isColinearWithFirstLine);
-    if (isColinearWithFirstLine) {
-      // current and first line are the same
       continue;
     }
     linesOut.push(currLine)
+  }
+  // If the first line has slope -Infinity and the last line has slope +Infinity,
+  // remove the last line as a duplicate.
+  const lastLine = linesOut[linesOut.length - 1];
+  if (linesOut.length > 1 && isColinear(firstLine, lastLine)) {
+    linesOut.pop();
   }
   debug('candidate line slopes:', linesOut.map((line) => findLineSlope(line)));
   return linesOut;
@@ -258,46 +256,39 @@ function findLineSlope(line: Line): number {
   return Infinity;
 }
 
-// Are two lines the same (within error tolerance)?
+// Are two lines the same?
 function isColinear(line1: Line, line2: Line): boolean {
-  let isColinear: boolean;
-  if (isLineHorizontal(line1)) {
-    isColinear = isLineHorizontal(line2) && isNearZero(line1.p1.y - line2.p1.y);
-  } else if (isLineVertical(line1)) {
-    isColinear = isLineVertical(line2) && isNearZero(line1.p1.x - line2.p1.x);
-  } else if (isLineHorizontal(line2)) {
-    isColinear = isLineHorizontal(line1) && isNearZero(line1.p1.y - line2.p1.y);
-  } else if (isLineVertical(line2)) {
-    isColinear = isLineVertical(line1) && isNearZero(line1.p1.x - line2.p1.x);
-  } else {
-    // By this point, Lines 1 and 2 are guaranteed not to be horizontal or vertical.
-    // calculateLine functions will never throw.
+  // Lines are the same if:
+  // at both x-bounds y is the same (within error tolerance) on both lines
+  // or at both y-bounds x is the same (within error tolerance) on both lines.
 
-    // compare two points on both lines. each pair should be the same (within error tolerance)
-    const slope1 = findLineSlope(line1);
-    if (-1 < slope1 && slope1 < 1) {
-      // use x bounds to compute y
-      const y1line1 = calculateLineY(line1, X_LOWER_BOUND);
-      const y1line2 = calculateLineY(line2, X_LOWER_BOUND);
-      const y2line1 = calculateLineY(line1, X_UPPER_BOUND);
-      const y2line2 = calculateLineY(line2, X_UPPER_BOUND);
-      // lines are colinear if each pair of points are the same (within error tolerance)
-      isColinear = isNearZero(y1line1 - y1line2) && isNearZero(y2line1 - y2line2);
-    } else {
-      // use y bounds to compute x
-      const x1line1 = calculateLineX(line1, Y_LOWER_BOUND);
-      const x1line2 = calculateLineX(line2, Y_LOWER_BOUND);
-      const x2line1 = calculateLineX(line1, Y_UPPER_BOUND);
-      const x2line2 = calculateLineX(line2, Y_UPPER_BOUND);
-      // lines are colinear if each pair of points are the same (within error tolerance)
-      isColinear = isNearZero(x1line1 - x1line2) && isNearZero(x2line1 - x2line2);
-    }
+  // use x-bounds to compute y
+  const y1line1 = calculateLineY(line1, X_LOWER_BOUND);
+  const y1line2 = calculateLineY(line2, X_LOWER_BOUND);
+  const y2line1 = calculateLineY(line1, X_UPPER_BOUND);
+  const y2line2 = calculateLineY(line2, X_UPPER_BOUND);
+  if (isNearZero(y1line1 - y1line2) && isNearZero(y2line1 - y2line2)) {
+    return true;
   }
-  return isColinear;
+
+  // use y-bounds to compute x
+  const x1line1 = calculateLineX(line1, Y_LOWER_BOUND);
+  const x1line2 = calculateLineX(line2, Y_LOWER_BOUND);
+  const x2line1 = calculateLineX(line1, Y_UPPER_BOUND);
+  const x2line2 = calculateLineX(line2, Y_UPPER_BOUND);
+  if (isNearZero(x1line1 - x1line2) && isNearZero(x2line1 - x2line2)) {
+    return true;
+  }
+
+  return false;
 }
 
 // Calculate x given y.
 function calculateLineX(line: Line, y: number): number {
+  // If line is perfectly vertical, return x
+  if (line.p1.x === line.p2.x) {
+    return line.p1.x;
+  }
   // Solve for a, b given two points P1, P2:
   //   y = ax + b
   //   a = (P2.y - P1.y) / (P2.x - P1.x)
@@ -311,6 +302,10 @@ function calculateLineX(line: Line, y: number): number {
 
 // Calculate y given x.
 function calculateLineY(line: Line, x: number): number {
+  // If line is perfectly horizontal, return y
+  if (line.p1.y === line.p2.y) {
+    return line.p1.y;
+  }
   // Solve for a, b given two points P1, P2:
   //   y = ax + b
   //   a = (P2.y - P1.y) / (P2.x - P1.x)
