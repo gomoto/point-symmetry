@@ -325,8 +325,9 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
 
 function testPoints(expectedLineCount: number, points: Point[]): void {
   console.log('Points:');
-  console.log(points);
+  console.table(points);
   const lines = findSymmetryLines(points);
+  console.log('Symmetry lines:');
   console.table(lines);
   assert.equal(lines.length, expectedLineCount);
   assert.ok(linesUnique(lines));
