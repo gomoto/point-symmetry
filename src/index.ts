@@ -272,6 +272,10 @@ function main(): void {
   ]);
 }
 
+// Test reflectional symmetry for the given point configuration
+// and for rotations and translations of the configuration.
+// The number of symmetry lines should be the same for all
+// transformations of a single point configuration.
 function testSymmetry(message: string, expectedLineCount: number, points: Point[]): void {
   console.log();
   console.log('--------');
@@ -280,8 +284,6 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   console.log();
 
   // List of rotations (radians) to test.
-  // The number of symmetry lines should be the same
-  // for all rotations of this point configuration.
   const rotations: number[] = [
     0, // 0°
     1, // 57.29578...°
@@ -296,6 +298,7 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     2 * Math.PI, // 360°
   ];
 
+  // List of translations to test.
   const translations: Point[] = [
     {x: 0, y: 0},
     createUnitCircleTranslation(0), // 0°
