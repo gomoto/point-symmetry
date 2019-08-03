@@ -283,9 +283,9 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   // The number of symmetry lines should be the same
   // for all rotations of this point configuration.
   const rotations: number[] = [
-    0,
-    1,
-    2,
+    0, // 0°
+    1, // 57.29578...°
+    2, // 114.59156...°
     (1 / 6) * Math.PI, // 30°
     (1 / 3) * Math.PI, // 60°
     (1 / 2) * Math.PI, // 90°
