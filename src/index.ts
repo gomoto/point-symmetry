@@ -285,7 +285,14 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   const rotations: number[] = [
     0,
     1,
-    Math.PI / 2, // 90°
+    2,
+    (1 / 6) * Math.PI, // 30°
+    (1 / 3) * Math.PI, // 60°
+    (1 / 2) * Math.PI, // 90°
+    (2 / 3) * Math.PI, // 120°
+    Math.PI, // 180°
+    (3 / 2) * Math.PI, // 270°
+    2 * Math.PI, // 360°
   ];
 
   rotations.forEach((rotation) => {
