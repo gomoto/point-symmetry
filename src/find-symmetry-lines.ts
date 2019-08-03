@@ -5,7 +5,7 @@ const DEBUG = true;
 // Do not use for tolerance in line coefficient units.
 const EPSILON = 1e-4;
 
-// x and y bounds used in colinearity checks
+// x and y bounds used in line coincidence checks
 const X_LOWER_BOUND = -1000;
 const X_UPPER_BOUND = 1000;
 const Y_LOWER_BOUND = -1000;
@@ -63,15 +63,15 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   // Always take first line.
   const firstLine = linesSortedBySlope[0];
   linesOut.push(firstLine);
-  // Add each subsequent line unless it is colinear with the previous line.
+  // Add each subsequent line unless it is coincident with the previous line.
   // Only need to check previous line because lines are sorted by slope.
   for (let i = 1; i < linesSortedBySlope.length; i++) {
     const prevLine = linesOut[linesOut.length - 1];
     const currLine = linesSortedBySlope[i];
     debug('Comparing lines:', prevLine, currLine);
-    const isColinearWithPreviousLine = isColinear(prevLine, currLine);
-    debug('Current and previous lines colinear?', isColinearWithPreviousLine);
-    if (isColinearWithPreviousLine) {
+    const linesCoincideWithPreviousLine = linesCoincide(prevLine, currLine);
+    debug('Current and previous lines coincident?', linesCoincideWithPreviousLine);
+    if (linesCoincideWithPreviousLine) {
       continue;
     }
     linesOut.push(currLine)
@@ -79,7 +79,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
   // If the first line has slope -Infinity and the last line has slope +Infinity,
   // remove the last line as a duplicate.
   const lastLine = linesOut[linesOut.length - 1];
-  if (linesOut.length > 1 && isColinear(firstLine, lastLine)) {
+  if (linesOut.length > 1 && linesCoincide(firstLine, lastLine)) {
     linesOut.pop();
   }
   debug('candidate line slopes:', linesOut.map((line) => findLineSlope(line)));
@@ -257,7 +257,7 @@ function findLineSlope(line: Line): number {
 }
 
 // Are two lines the same?
-function isColinear(line1: Line, line2: Line): boolean {
+function linesCoincide(line1: Line, line2: Line): boolean {
   // Lines are the same if:
   // at both x-bounds y is the same (within error tolerance) on both lines
   // or at both y-bounds x is the same (within error tolerance) on both lines.
@@ -348,7 +348,7 @@ export function linesUnique(lines: Line[]): boolean {
   for (let i = 1; i < sortedLines.length; i++) {
     const prevLine = sortedLines[i - 1];
     const currLine = sortedLines[i];
-    if (isColinear(prevLine, currLine)) {
+    if (linesCoincide(prevLine, currLine)) {
       return false;
     }
   }
@@ -356,7 +356,7 @@ export function linesUnique(lines: Line[]): boolean {
   if (sortedLines.length > 1) {
     const firstLine = sortedLines[0];
     const lastLine = sortedLines[sortedLines.length - 1];
-    if (isColinear(firstLine, lastLine)) {
+    if (linesCoincide(firstLine, lastLine)) {
       return false;
     }
   }
