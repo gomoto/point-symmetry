@@ -277,12 +277,6 @@ function main(): void {
 // The number of symmetry lines should be the same for all
 // transformations of a single point configuration.
 function testSymmetry(message: string, expectedLineCount: number, points: Point[]): void {
-  console.log();
-  console.log('--------');
-  console.log();
-  console.log(message);
-  console.log();
-
   // List of rotations (radians) to test.
   const rotations: number[] = [
     0, // 0°
@@ -317,7 +311,15 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     const translatedPoints = translatePoints(points, translation);
     rotations.forEach((rotation) => {
       const translatedRotatedPoints = rotatePoints(translatedPoints, rotation);
+      console.log();
+      console.log('--------');
+      console.log();
       console.log(`Test #${++testCounter}`);
+      console.log();
+      console.log(message);
+      console.log('Rotation (radians):', rotation);
+      console.log('Translation:', translation);
+      console.log();
       testPoints(expectedLineCount, translatedRotatedPoints);
     });
   });
