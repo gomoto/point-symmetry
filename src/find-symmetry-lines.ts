@@ -21,16 +21,18 @@ export function findSymmetryLines(points: Point[]): Line[] {
   return symmetryLines;
 }
 
-// Find unique candidate lines of symmetry.
+// Find candidate symmetry lines.
+// Each candidate line:
+// 1. Passes through global center.
+// 2. Has a unique slope.
 function findCandidateSymmetryLines(points: Point[]): Line[] {
   const candidates: Line[] = [];
-  const pairs = findPointPairs(points);
   const centerPoint = findCenterPoint(points);
-  // Keep only those lines which:
-  // 1. Pass through global center. All lines of symmetry pass through global center.
-  // 2. Have a unique slope (within error tolerance); there can be only one line
-  //    for each slope that also passes through global center.
+  const pairs = findPointPairs(points);
   pairs.forEach((pair) => {
+    // Each pair has two potential symmetry lines, one that passes through the
+    // points and one normal to that line that also passes through the midpoint
+    // of the pair of points.
     const crossLine: Line = {
       p1: pair[0],
       p2: pair[1],
