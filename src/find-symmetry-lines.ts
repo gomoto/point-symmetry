@@ -89,7 +89,6 @@ function findPointPairs(points: Point[]): [Point, Point][] {
 
 // Return the average point for a set of points.
 function findCenterPoint(points: Point[]): Point {
-  // average point
   const px = points.reduce((sum, point) => sum + point.x, 0) / points.length;
   const py = points.reduce((sum, point) => sum + point.y, 0) / points.length;
   const p: Point = {
@@ -117,7 +116,7 @@ function isPointOnLine(point: Point, line: Line): boolean {
 
 // Create line perpendicular to given line that passes through given point.
 function createNormalLine(line: Line, point: Point): Line {
-  // other point on normal line should be different from given point
+  // Points on returned line must be different points.
   let otherPoint: Point;
   if (isLineHorizontal(line)) {
     otherPoint = {
@@ -156,8 +155,9 @@ function createNormalLine(line: Line, point: Point): Line {
   return normalLine;
 }
 
+// Deduplicate lines by slope. Returns new array.
 function deduplicateLines(candidates: Line[]): Line[] {
-  // Deduplicate lines by slope. First sort lines by slope for faster comparisons.
+  // First sort lines by slope for faster comparisons.
   const sortedCandidates = candidates.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
   debug(() => {
     console.log('Sorted candidates:');
@@ -194,6 +194,7 @@ function deduplicateLines(candidates: Line[]): Line[] {
   return lines;
 }
 
+// Return point resulting from reflection of given point across given line.
 function reflectPointAcrossLine(point: Point, line: Line): Point {
   const projectedPoint = projectPointOntoLine(point, line);
   const dx = projectedPoint.x - point.x;
@@ -205,6 +206,7 @@ function reflectPointAcrossLine(point: Point, line: Line): Point {
   return reflectedPoint;
 }
 
+// Return point resulting from projection of given point onto given line.
 function projectPointOntoLine(point: Point, line: Line): Point {
   let intersectionPoint: Point;
   if (isLineHorizontal(line)) {
