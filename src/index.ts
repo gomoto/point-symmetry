@@ -13,7 +13,6 @@ function main(): void {
     {x: 1, y: 0},
   ]);
 
-
   // 3 points
 
   testSymmetry('Three points in a line, evenly spaced', 2, [
@@ -306,15 +305,12 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     createUnitCircleTranslation(2 * Math.PI), // 360°
   ];
 
-  let testCounter: number = 0;
   translations.forEach((translation) => {
     const translatedPoints = translatePoints(points, translation);
     rotations.forEach((rotation) => {
       const translatedRotatedPoints = rotatePoints(translatedPoints, rotation);
       console.log();
       console.log('--------');
-      console.log();
-      console.log(`Test #${++testCounter}`);
       console.log();
       console.log(message);
       console.log('Rotation (radians):', rotation);
