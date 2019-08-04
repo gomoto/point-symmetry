@@ -54,40 +54,7 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
     console.log('Unfiltered candidates:');
     console.table(candidates);
   });
-  // Deduplicate lines by slope. First sort lines by slope for faster comparisons.
-  const sortedCandidates = candidates.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
-  debug(() => {
-    console.log('Sorted candidates:');
-    console.table(sortedCandidates);
-    console.log('Sorted candidate slopes:');
-    console.table(sortedCandidates.map((line) => findLineSlope(line)));
-  });
-  // Output lines will also end up sorted by slope.
-  const lines: Line[] = [];
-  if (sortedCandidates.length === 0) {
-    return lines;
-  }
-  // Always take first line.
-  lines.push(sortedCandidates[0]);
-  // Add each subsequent line unless it is coincident with the previous line.
-  // Only need to check previous line because lines are sorted by slope.
-  for (let i = 1; i < sortedCandidates.length; i++) {
-    const prevLine = lines[lines.length - 1];
-    const currLine = sortedCandidates[i];
-    if (linesCoincide(prevLine, currLine)) {
-      continue;
-    }
-    lines.push(currLine)
-  }
-  // If the first line has slope -Infinity and the last line has slope +Infinity,
-  // remove the last line as a duplicate.
-  if (lines.length > 1) {
-    const firstLine = lines[0]
-    const lastLine = lines[lines.length - 1];
-    if(linesCoincide(firstLine, lastLine)) {
-      lines.pop();
-    }
-  }
+  const lines = deduplicateLines(candidates);
   return lines;
 }
 
@@ -187,6 +154,44 @@ function createNormalLine(line: Line, point: Point): Line {
     p2: otherPoint,
   };
   return normalLine;
+}
+
+function deduplicateLines(candidates: Line[]): Line[] {
+  // Deduplicate lines by slope. First sort lines by slope for faster comparisons.
+  const sortedCandidates = candidates.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
+  debug(() => {
+    console.log('Sorted candidates:');
+    console.table(sortedCandidates);
+    console.log('Sorted candidate slopes:');
+    console.table(sortedCandidates.map((line) => findLineSlope(line)));
+  });
+  // Output lines will also end up sorted by slope.
+  const lines: Line[] = [];
+  if (sortedCandidates.length === 0) {
+    return lines;
+  }
+  // Always take first line.
+  lines.push(sortedCandidates[0]);
+  // Add each subsequent line unless it is coincident with the previous line.
+  // Only need to check previous line because lines are sorted by slope.
+  for (let i = 1; i < sortedCandidates.length; i++) {
+    const prevLine = lines[lines.length - 1];
+    const currLine = sortedCandidates[i];
+    if (linesCoincide(prevLine, currLine)) {
+      continue;
+    }
+    lines.push(currLine)
+  }
+  // If the first line has slope -Infinity and the last line has slope +Infinity,
+  // remove the last line as a duplicate.
+  if (lines.length > 1) {
+    const firstLine = lines[0]
+    const lastLine = lines[lines.length - 1];
+    if(linesCoincide(firstLine, lastLine)) {
+      lines.pop();
+    }
+  }
+  return lines;
 }
 
 function reflectPointAcrossLine(point: Point, line: Line): Point {
