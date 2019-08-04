@@ -248,17 +248,14 @@ function isLineVertical(line: Line): boolean {
   return isNearZero(line.p1.x - line.p2.x);
 }
 
-// Returns a number or Infinity (and never negative Infinity).
+// Return slope of the line.
 function findLineSlope(line: Line): number {
   // Solve for a, b given two points P1, P2:
   //   y = ax + b
   //   a = (P2.y - P1.y) / (P2.x - P1.x)
   //   b = P2.y - a * P2.x
   const slope = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-  if (isFinite(slope)) {
-    return slope;
-  }
-  return Infinity;
+  return slope;
 }
 
 // Are two lines the same?
