@@ -269,6 +269,44 @@ function main(): void {
     {x: -1, y: -Math.sqrt(3)},
     {x: 1, y: -Math.sqrt(3)},
   ]);
+
+  // Other
+
+  testSymmetry('Two parallel lines', 1, [
+    {x: 0, y: 5},
+    {x: 1, y: 5},
+    {x: 3, y: 5},
+    {x: 0, y: -5},
+    {x: 1, y: -5},
+    {x: 3, y: -5},
+  ]);
+
+  testSymmetry('Arrow', 1, [
+    {x: 0, y: 1},
+    {x: 1, y: 1},
+    {x: 2, y: 1},
+    {x: 3, y: 1},
+    {x: 2, y: 2},
+    {x: 0, y: -1},
+    {x: 1, y: -1},
+    {x: 2, y: -1},
+    {x: 3, y: -1},
+    {x: 2, y: -2},
+    {x: 4, y: 0},
+  ]);
+
+  testSymmetry('Intersecting lines', 2, [
+    {x: 0, y: 0},
+    {x: -2, y: -6},
+    {x: -1, y: -3},
+    {x: 1, y: 3},
+    {x: 2, y: 6},
+    {x: -2, y: 6},
+    {x: -1, y: 3},
+    {x: 1, y: -3},
+    {x: 2, y: -6},
+  ]);
+
 }
 
 // Test reflectional symmetry for the given point configuration
