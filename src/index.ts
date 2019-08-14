@@ -331,6 +331,7 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   ];
 
   // List of translations to test.
+  const LARGE_TRANSLATION = 1000;
   const translations: Point[] = [
     {x: 0, y: 0},
     createUnitCircleTranslation(0), // 0°
@@ -342,6 +343,14 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     createUnitCircleTranslation(Math.PI), // 180°
     createUnitCircleTranslation((3 / 2) * Math.PI), // 270°
     createUnitCircleTranslation(2 * Math.PI), // 360°
+    {x: LARGE_TRANSLATION, y: 0},
+    {x: LARGE_TRANSLATION, y: LARGE_TRANSLATION},
+    {x: 0, y: LARGE_TRANSLATION},
+    {x: -LARGE_TRANSLATION, y: LARGE_TRANSLATION},
+    {x: -LARGE_TRANSLATION, y: 0},
+    {x: -LARGE_TRANSLATION, y: -LARGE_TRANSLATION},
+    {x: 0, y: -LARGE_TRANSLATION},
+    {x: LARGE_TRANSLATION, y: -LARGE_TRANSLATION},
   ];
 
   translations.forEach((translation) => {
