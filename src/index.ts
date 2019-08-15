@@ -1,5 +1,6 @@
-import { /*findSymmetryLines,*/ linesUnique } from './find-symmetry-lines';
+// import { findSymmetryLines } from './find-symmetry-lines';
 import { findSymmetryLines } from './find-symmetry-lines-2';
+import { linesUnique } from './find-symmetry-lines';
 import { strict as assert } from 'assert';
 import { Point } from './interfaces';
 import { rotatePoint } from './rotate-point';
