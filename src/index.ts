@@ -1,6 +1,8 @@
-import { findSymmetryLines, linesUnique } from './find-symmetry-lines';
+import { /*findSymmetryLines,*/ linesUnique } from './find-symmetry-lines';
+import { findSymmetryLines } from './find-symmetry-lines-2';
 import { strict as assert } from 'assert';
-import { Point } from './find-symmetry-lines';
+import { Point } from './interfaces';
+import { rotatePoint } from './rotate-point';
 
 main();
 
@@ -387,15 +389,8 @@ function testPoints(expectedLineCount: number, points: Point[]): void {
 }
 
 function rotatePoints(points: Point[], radians: number): Point[] {
-  // ⎡ cosθ -sinθ ⎤  ⎡ x ⎤   ⎡ xcosθ - ysinθ ⎤
-  // ⎢            ⎥  ⎢   ⎥ = ⎢               ⎥
-  // ⎣ sinθ  cosθ ⎦  ⎣ y ⎦   ⎣ xsinθ + ycosθ ⎦
   const rotatedPoints = points.map((point) => {
-    const rotatedPoint: Point = {
-      x: point.x * Math.cos(radians) - point.y * Math.sin(radians),
-      y: point.x * Math.sin(radians) + point.y * Math.cos(radians),
-    };
-    return rotatedPoint;
+    return rotatePoint(point, radians);
   });
   return rotatedPoints;
 }
