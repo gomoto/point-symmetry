@@ -24,7 +24,7 @@ export function findSymmetryLines(points: Point[]): Line[] {
   });
 
   // Create candidate lines connecting global center and each point + midpoint.
-  const candidateLines = findCandidateLines2(points);
+  const candidateLines = findCandidateLines(points);
   // const candidateLines = findCandidateLines(points);
   debug(() => {
     console.log('candidateLines');
@@ -81,21 +81,6 @@ export function findSymmetryLines(points: Point[]): Line[] {
   });
 
   return lines;
-}
-
-function findCandidateLines2(points: Point[]): Line[] {
-  const pairs = findPointPairs(points);
-  const midpoints = pairs.map((pair) => findCenterPoint(pair));
-
-  // Find global center among all points.
-  const globalCenter = findCenterPoint(points);
-
-  // Create candidate lines connecting global center and each point + midpoint.
-  const candidateLines = [...points, ...midpoints]
-  .map<Line>((point) => ({p1: point, p2: globalCenter}))
-  .filter((line) => !(isNearZero(line.p1.x - line.p2.x) && isNearZero(line.p1.y - line.p2.y)));
-
-  return candidateLines;
 }
 
 function findCandidateLines(points: Point[]): Line[] {
@@ -287,3 +272,18 @@ function debug(fn: () => void) {
     fn();
   }
 }
+
+// function findCandidateLines2(points: Point[]): Line[] {
+//   const pairs = findPointPairs(points);
+//   const midpoints = pairs.map((pair) => findCenterPoint(pair));
+
+//   // Find global center among all points.
+//   const globalCenter = findCenterPoint(points);
+
+//   // Create candidate lines connecting global center and each point + midpoint.
+//   const candidateLines = [...points, ...midpoints]
+//   .map<Line>((point) => ({p1: point, p2: globalCenter}))
+//   .filter((line) => !(isNearZero(line.p1.x - line.p2.x) && isNearZero(line.p1.y - line.p2.y)));
+
+//   return candidateLines;
+// }
