@@ -318,6 +318,13 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   const rotations: number[] = [
     0, // 0°
     1e-8, // 0.0000005729...°
+    // 1e-7,
+    // 1e-6,
+    // 1e-5,
+    // 1e-4,
+    // 1e-3,
+    // 1e-2,
+    // 1e-1,
     1, // 57.29578...°
     2, // 114.59156...°
     (1 / 6) * Math.PI, // 30°
