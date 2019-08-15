@@ -10,6 +10,12 @@ const EPSILON = 1e-4;
 
 export function findSymmetryLines(points: Point[]): Line[] {
 
+  // Zero points means zero lines of symmetry.
+  // One point means infinite lines of symmetry.
+  if (points.length < 2) {
+    return [];
+  }
+
   // Find global center among all points.
   const globalCenter = findCenterPoint(points);
   debug(() => {

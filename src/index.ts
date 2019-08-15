@@ -8,6 +8,16 @@ main();
 
 function main(): void {
 
+  // 0 points
+
+  testSymmetry('Zero points', 0, [
+  ]);
+
+  // 1 point
+
+  testSymmetry('One point', 0, [
+  ]);
+
   // 2 points
 
   testSymmetry('Two points', 2, [
