@@ -37,7 +37,7 @@ export function findSymmetryLines(points: Point[]): Line[] {
   // Find the remaining lines by rotating the first line.
   // For N points, there are at most N lines of symmetry.
   // The number of lines of symmetry is a factor of N or of N - 1 (when one point coincides with the global center).
-  // For each factor in decreasing order starting from N, rotate the first line by 2π/N.
+  // For each factor in decreasing order starting from N, rotate the first line by π/N.
   // Return the first factor where all points are reflected by the rotated line.
   const N = points.length;
   const factors = [
