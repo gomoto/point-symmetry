@@ -76,7 +76,7 @@ export function findSymmetryLines(points: Point[]): Line[] {
 // Find first line that reflects all points. Each pair of points has two potential
 // lines of symmetry lines, one that passes through the points and one normal
 // to that line that also passes through the midpoint of the pair of points.
-function findFirstLine(points: Point[]): Line | undefined {
+function findFirstLine(points: Point[]): Line | null {
   // N choose 2
   for (let p = 0; p < points.length - 1; p++) {
     for (let q = p + 1; q < points.length; q++) {
@@ -97,7 +97,7 @@ function findFirstLine(points: Point[]): Line | undefined {
       }
     }
   }
-  return;
+  return null;
 }
 
 function rotateLine(line: Line, radians: number, around: Point): Line {
