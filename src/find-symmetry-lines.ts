@@ -1,33 +1,86 @@
+import { Point, Line } from './interfaces';
+import { rotatePoint } from './rotate-point';
+import { projectPointOntoLine } from './project-point';
+
 // Toggle debug logging.
 const DEBUG = false;
 
 // Error tolerance in distance unit.
-// Do not use for tolerance in line coefficient units.
-const EPSILON = 1e-4;
-
-// x and y bounds used in line coincidence checks
-const X_LOWER_BOUND = -1000;
-const X_UPPER_BOUND = 1000;
-const Y_LOWER_BOUND = -1000;
-const Y_UPPER_BOUND = 1000;
+export const EPSILON = 1e-10;
 
 export function findSymmetryLines(points: Point[]): Line[] {
-  const candidateLines = findCandidateSymmetryLines(points);
+
+  // Zero points means zero lines of symmetry.
+  // One point means infinite lines of symmetry.
+  if (points.length < 2) {
+    return [];
+  }
+
+  // Find global center among all points.
+  const globalCenter = findCenterPoint(points);
   debug(() => {
-    console.log('Candidate lines:');
+    console.log('globalCenter');
+    console.table(globalCenter);
+  });
+
+  // Create candidate lines connecting global center and each point + midpoint.
+  const candidateLines = findCandidateLines(points);
+  debug(() => {
+    console.log('candidateLines');
     console.table(candidateLines);
   });
-  const symmetryLines = candidateLines.filter((line) => doesLineReflectAllPoints(line, points));
-  return symmetryLines;
+
+  // Find first line that reflects all points. That line is one of the lines of symmetry.
+  const firstLine = candidateLines.find((line) => doesLineReflectAllPoints(line, points));
+  debug(() => {
+    console.log('firstLine');
+    console.table(firstLine);
+  });
+
+  if (!firstLine) {
+    return [];
+  }
+
+  // Find the remaining lines by rotating the first line.
+  // For N points, there are at most N lines of symmetry.
+  // The number of lines of symmetry is a factor of N or of N - 1 (when one point coincides with the global center).
+  // For each factor in decreasing order starting from N, rotate the first line by 2π/N.
+  // Return the first factor where all points are reflected by the rotated line.
+  const N = points.length;
+  const factors = [
+    ...factorize(N),
+    ...factorize(N-1),
+  ].slice().sort().reverse();
+  debug(() => {
+    console.log('factors');
+    console.log(factors);
+  });
+
+  const factor = factors.find((factor) => {
+    const radians = Math.PI / factor;
+    const rotatedLine = rotateLine(firstLine, radians, globalCenter);
+    return doesLineReflectAllPoints(rotatedLine, points);
+  })!; // There will always be at least one factor (1) that reflects all points
+  debug(() => {
+    console.log('factor');
+    console.log(factor);
+  });
+
+  // There are `factor` number of lines of symmetry. Expand on the first line by rotating it `factor` times.
+  const lines: Line[] = [];
+  for (let f = 0; f < factor; f++) {
+    lines.push(rotateLine(firstLine, f * Math.PI / N, globalCenter));
+  }
+  debug(() => {
+    console.log('lines');
+    console.table(lines);
+  });
+
+  return lines;
 }
 
-// Find candidate symmetry lines.
-// Each candidate line:
-// 1. Passes through global center.
-// 2. Has a unique slope.
-function findCandidateSymmetryLines(points: Point[]): Line[] {
+function findCandidateLines(points: Point[]): Line[] {
   const candidates: Line[] = [];
-  const centerPoint = findCenterPoint(points);
   const pairs = findPointPairs(points);
   pairs.forEach((pair) => {
     // Each pair has two potential symmetry lines, one that passes through the
@@ -37,38 +90,32 @@ function findCandidateSymmetryLines(points: Point[]): Line[] {
       p1: pair[0],
       p2: pair[1],
     };
-    if (isPointOnLine(centerPoint, crossLine)) {
-      candidates.push(crossLine);
-    }
-    // midpoint on crossLine is also point on normalLine
-    const midpoint: Point = {
-      x: (crossLine.p1.x + crossLine.p2.x) / 2,
-      y: (crossLine.p1.y + crossLine.p2.y) / 2,
-    };
-    const normalLine: Line = createNormalLine(crossLine, midpoint);
-    if (isPointOnLine(centerPoint, normalLine)) {
-      candidates.push(normalLine);
-    }
+    candidates.push(crossLine);
+    const normalLine: Line = bisectLine(crossLine);
+    candidates.push(normalLine);
   });
-  debug(() => {
-    console.log('Unfiltered candidates:');
-    console.table(candidates);
-  });
-  const lines = deduplicateLines(candidates);
-  return lines;
+  return candidates;
 }
 
-function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
-  // O(N^2)
-  return points.every((point) => {
-    const reflectedPoint = reflectPointAcrossLine(point, line);
-    return Boolean(points.find((otherPoint) => {
-      return (
-        isNearZero(reflectedPoint.x - otherPoint.x) &&
-        isNearZero(reflectedPoint.y - otherPoint.y)
-      );
-    }));
-  });
+function rotateLine(line: Line, radians: number, around: Point): Line {
+  const rotatedP1 = rotatePoint({x: line.p1.x - around.x, y: line.p1.y - around.y}, radians);
+  const rotatedP2 = rotatePoint({x: line.p2.x - around.x, y: line.p2.y - around.y}, radians);
+  const lineOut: Line = {
+    p1: {x: rotatedP1.x + around.x, y: rotatedP1.y + around.y},
+    p2: {x: rotatedP2.x + around.x, y: rotatedP2.y + around.y},
+  };
+  return lineOut;
+}
+
+// Return all factors of a number, largest first.
+function factorize(n: number): number[] {
+  const out: number[] = [];
+  for (let i = n; i >= 1; i--) {
+    if (n % i === 0) {
+      out.push(i);
+    }
+  }
+  return out;
 }
 
 // Return list of point pairs, unrepeated.
@@ -98,100 +145,22 @@ function findCenterPoint(points: Point[]): Point {
   return p;
 }
 
-// Is the point on the line?
-function isPointOnLine(point: Point, line: Line): boolean {
-  // Point is on line if:
-  // at point's x, point's y equals line's y (within error tolerance)
-  // or a point's y, point's x equals line's x (within error tolerance).
-  const y = calculateLineY(line, point.x);
-  if (isNearZero(y - point.y)) {
-    return true;
-  }
-  const x = calculateLineX(line, point.y);
-  if (isNearZero(x - point.x)) {
-    return true;
-  }
-  return false;
-}
-
-// Create line perpendicular to given line that passes through given point.
-function createNormalLine(line: Line, point: Point): Line {
-  // Points on returned line must be different points.
-  let otherPoint: Point;
-  if (isLineHorizontal(line)) {
-    otherPoint = {
-      x: point.x,
-      y: point.y + 1,
-    };
-  } else if (isLineVertical(line)) {
-    otherPoint = {
-      x: point.x + 1,
-      y: point.y,
-    };
-  } else {
-    // Solve line 1 for a, b given two points P1, P2:
-    //   y = ax + b
-    //   a = (P2.y - P1.y) / (P2.x - P1.x)
-    //   b = P2.y - a * P2.x
-
-    // Solve line 2 for a', b' given one point P3 and knowing that line 2 is perpendicular to line 1:
-    //   y = a'x + b
-    //   a' = (P1.x - P2.x) / (P2.y - P1.y) [negative reciprocal of a]
-    //   b' = P3.y - a' * P3.x
-
-    // 1st order polynomial coefficient, a'
-    const a = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
-    // 0th order polynomial coefficient, b'
-    const b = point.y - a * point.x;
-    otherPoint = {
-      x: point.x + 1,
-      y: a * (point.x + 1) + b,
-    };
-  }
-  const normalLine: Line = {
-    p1: point,
-    p2: otherPoint,
-  };
-  return normalLine;
-}
-
-// Deduplicate lines by slope. Returns new array.
-function deduplicateLines(candidates: Line[]): Line[] {
-  // First sort lines by slope for faster comparisons.
-  const sortedCandidates = candidates.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
-  debug(() => {
-    console.log('Sorted candidates:');
-    console.table(sortedCandidates);
-    console.log('Sorted candidate slopes:');
-    console.table(sortedCandidates.map((line) => findLineSlope(line)));
+function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
+  return points.every((point) => {
+    const reflectedPoint = reflectPointAcrossLine(point, line);
+    return Boolean(points.find((otherPoint) => {
+      return (
+        isNearZero(reflectedPoint.x - otherPoint.x) &&
+        isNearZero(reflectedPoint.y - otherPoint.y)
+      );
+    }));
   });
-  // Output lines will also end up sorted by slope.
-  const lines: Line[] = [];
-  if (sortedCandidates.length === 0) {
-    return lines;
-  }
-  // Always take first line.
-  lines.push(sortedCandidates[0]);
-  // Add each subsequent line unless it is coincident with the previous line.
-  // Only need to check previous line because lines are sorted by slope.
-  for (let i = 1; i < sortedCandidates.length; i++) {
-    const prevLine = lines[lines.length - 1];
-    const currLine = sortedCandidates[i];
-    if (linesCoincide(prevLine, currLine)) {
-      continue;
-    }
-    lines.push(currLine)
-  }
-  // If the first line has slope -Infinity and the last line has slope +Infinity,
-  // remove the last line as a duplicate.
-  if (lines.length > 1) {
-    const firstLine = lines[0]
-    const lastLine = lines[lines.length - 1];
-    if(linesCoincide(firstLine, lastLine)) {
-      lines.pop();
-    }
-  }
-  return lines;
+}
+
+// Determine if a number is "zero" (less than some small value epsilon).
+// Rounded floating point numbers are often close but not exact.
+function isNearZero(value: number): boolean {
+  return Math.abs(value) < EPSILON;
 }
 
 // Return point resulting from reflection of given point across given line.
@@ -206,161 +175,34 @@ function reflectPointAcrossLine(point: Point, line: Line): Point {
   return reflectedPoint;
 }
 
-// Return point resulting from projection of given point onto given line.
-function projectPointOntoLine(point: Point, line: Line): Point {
-  let intersectionPoint: Point;
-  if (isLineHorizontal(line)) {
-    intersectionPoint = {
-      x: point.x,
-      y: line.p1.y,
-    };
-  } else if (isLineVertical(line)) {
-    intersectionPoint = {
-      x: line.p1.x,
-      y: point.y,
-    };
-  } else {
-    const normal = createNormalLine(line, point);
-    // Intersect lines. Lines are guaranteed to intersect because they're perpendicular.
-    // Solve for x, y:
-    //   y = ax + b
-    //   y = a'x + b'
-    //   ---
-    //   x = (b' - b) / (a - a')
-    //   y = a * (b' - b) / (a - a') + b
-    const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-    const b = line.p2.y - a * line.p2.x;
-    const aPrime = (normal.p2.y - normal.p1.y) / (normal.p2.x - normal.p1.x);
-    const bPrime = normal.p2.y - aPrime * normal.p2.x;
-    intersectionPoint = {
-      x: (bPrime - b) / (a - aPrime),
-      y: a * (bPrime - b) / (a - aPrime) + b,
-    };
-  }
-  return intersectionPoint;
-}
-
-function isLineHorizontal(line: Line): boolean {
-  return isNearZero(line.p1.y - line.p2.y);
-}
-
-function isLineVertical(line: Line): boolean {
-  return isNearZero(line.p1.x - line.p2.x);
-}
-
-// Return slope of the line.
-function findLineSlope(line: Line): number {
-  // Solve for a, b given two points P1, P2:
-  //   y = ax + b
-  //   a = (P2.y - P1.y) / (P2.x - P1.x)
-  //   b = P2.y - a * P2.x
-  const slope = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-  return slope;
-}
-
-// Are two lines the same?
-function linesCoincide(line1: Line, line2: Line): boolean {
-  // Lines are the same if:
-  // at both x-bounds y is the same (within error tolerance) on both lines
-  // or at both y-bounds x is the same (within error tolerance) on both lines.
-
-  // use x-bounds to compute y
-  const y1line1 = calculateLineY(line1, X_LOWER_BOUND);
-  const y1line2 = calculateLineY(line2, X_LOWER_BOUND);
-  const y2line1 = calculateLineY(line1, X_UPPER_BOUND);
-  const y2line2 = calculateLineY(line2, X_UPPER_BOUND);
-  if (isNearZero(y1line1 - y1line2) && isNearZero(y2line1 - y2line2)) {
-    return true;
-  }
-
-  // use y-bounds to compute x
-  const x1line1 = calculateLineX(line1, Y_LOWER_BOUND);
-  const x1line2 = calculateLineX(line2, Y_LOWER_BOUND);
-  const x2line1 = calculateLineX(line1, Y_UPPER_BOUND);
-  const x2line2 = calculateLineX(line2, Y_UPPER_BOUND);
-  if (isNearZero(x1line1 - x1line2) && isNearZero(x2line1 - x2line2)) {
-    return true;
-  }
-
-  return false;
-}
-
-// Calculate x given y.
-function calculateLineX(line: Line, y: number): number {
-  // If line is perfectly vertical, return x
-  if (line.p1.x === line.p2.x) {
-    return line.p1.x;
-  }
-  // Solve for a, b given two points P1, P2:
-  //   y = ax + b
-  //   a = (P2.y - P1.y) / (P2.x - P1.x)
-  //   b = P2.y - a * P2.x
-  //   x = (y - b) / a
-  const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-  const b = line.p2.y - a * line.p2.x;
-  const x = (y - b) / a;
-  return x;
-}
-
-// Calculate y given x.
-function calculateLineY(line: Line, x: number): number {
-  // If line is perfectly horizontal, return y
-  if (line.p1.y === line.p2.y) {
-    return line.p1.y;
-  }
-  // Solve for a, b given two points P1, P2:
-  //   y = ax + b
-  //   a = (P2.y - P1.y) / (P2.x - P1.x)
-  //   b = P2.y - a * P2.x
-  const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-  const b = line.p2.y - a * line.p2.x;
-  const y = a * x + b;
-  return y;
-}
-
-// Determine if a number is "zero" or less than some small value epsilon.
-// Rounded floating point numbers are often close but not exact.
-function isNearZero(value: number): boolean {
-  return Math.abs(value) < EPSILON;
+// Create line perpendicular to given line that passes through
+// the midpoint of the two points that define the line.
+export function bisectLine(line: Line): Line {
+  const midpoint = findCenterPoint([line.p1, line.p2]);
+  // Center line at its midpoint.
+  // Line represented by a vector (Point).
+  const shiftedLine: Point = {
+    x: line.p1.x - midpoint.x,
+    y: line.p1.y - midpoint.y,
+  };
+  // Swap x and y and negate.
+  const shiftedBisector: Point = {
+    x: -shiftedLine.y,
+    y: shiftedLine.x,
+  };
+  // Unshift line
+  const bisector: Line = {
+    p1: midpoint,
+    p2: {
+      x: shiftedBisector.x + midpoint.x,
+      y: shiftedBisector.y + midpoint.y,
+    },
+  };
+  return bisector;
 }
 
 function debug(fn: () => void) {
   if (DEBUG) {
     fn();
   }
-}
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface Line {
-  // A line is defined by two points, which should not be the same.
-  p1: Point;
-  p2: Point;
-}
-
-// Used in tests. Consider refactoring.
-export function linesUnique(lines: Line[]): boolean {
-  if (lines.length === 0) {
-    return true;
-  }
-  const sortedLines = lines.slice().sort((a, b) => findLineSlope(a) - findLineSlope(b));
-  for (let i = 1; i < sortedLines.length; i++) {
-    const prevLine = sortedLines[i - 1];
-    const currLine = sortedLines[i];
-    if (linesCoincide(prevLine, currLine)) {
-      return false;
-    }
-  }
-  // First and last lines might both be vertical.
-  if (sortedLines.length > 1) {
-    const firstLine = sortedLines[0];
-    const lastLine = sortedLines[sortedLines.length - 1];
-    if (linesCoincide(firstLine, lastLine)) {
-      return false;
-    }
-  }
-  return true;
 }

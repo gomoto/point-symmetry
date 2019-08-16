@@ -1,10 +1,23 @@
-import { findSymmetryLines, linesUnique } from './find-symmetry-lines';
+import { findSymmetryLines, EPSILON } from './find-symmetry-lines';
 import { strict as assert } from 'assert';
-import { Point } from './find-symmetry-lines';
+import { Point } from './interfaces';
+import { rotatePoint } from './rotate-point';
+
+// Run test cases
 
 main();
 
 function main(): void {
+
+  // 0 points
+
+  testSymmetry('Zero points', 0, [
+  ]);
+
+  // 1 point
+
+  testSymmetry('One point', 0, [
+  ]);
 
   // 2 points
 
@@ -170,9 +183,9 @@ function main(): void {
   // Testing lines with large but non-infinite slopes
   testSymmetry('Five points, square plus center point, rotated and slightly askew', 4, [
     {x: 1, y: 0},
-    {x: 1e-8, y: 1}, // large positive slope for line through this point and center point
+    {x: EPSILON, y: 1}, // large positive slope for line through this point and center point
     {x: -1, y: 0},
-    {x: 1e-8, y: -1}, // large negative slope for line through this point and center point
+    {x: EPSILON, y: -1}, // large negative slope for line through this point and center point
     {x: 0, y: 0}, // center point
   ]);
 
@@ -269,6 +282,44 @@ function main(): void {
     {x: -1, y: -Math.sqrt(3)},
     {x: 1, y: -Math.sqrt(3)},
   ]);
+
+  // Other
+
+  testSymmetry('Two parallel lines', 1, [
+    {x: 0, y: 5},
+    {x: 1, y: 5},
+    {x: 3, y: 5},
+    {x: 0, y: -5},
+    {x: 1, y: -5},
+    {x: 3, y: -5},
+  ]);
+
+  testSymmetry('Arrow', 1, [
+    {x: 0, y: 1},
+    {x: 1, y: 1},
+    {x: 2, y: 1},
+    {x: 3, y: 1},
+    {x: 2, y: 2},
+    {x: 0, y: -1},
+    {x: 1, y: -1},
+    {x: 2, y: -1},
+    {x: 3, y: -1},
+    {x: 2, y: -2},
+    {x: 4, y: 0},
+  ]);
+
+  testSymmetry('Intersecting lines', 2, [
+    {x: 0, y: 0},
+    {x: -2, y: -6},
+    {x: -1, y: -3},
+    {x: 1, y: 3},
+    {x: 2, y: 6},
+    {x: -2, y: 6},
+    {x: -1, y: 3},
+    {x: 1, y: -3},
+    {x: 2, y: -6},
+  ]);
+
 }
 
 // Test reflectional symmetry for the given point configuration
@@ -279,6 +330,14 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   // List of rotations (radians) to test.
   const rotations: number[] = [
     0, // 0°
+    1e-8, // 0.0000005729...°
+    1e-7,
+    1e-6,
+    1e-5,
+    1e-4,
+    1e-3,
+    1e-2,
+    1e-1,
     1, // 57.29578...°
     2, // 114.59156...°
     (1 / 6) * Math.PI, // 30°
@@ -292,6 +351,7 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
   ];
 
   // List of translations to test.
+  const LARGE_TRANSLATION = 1000;
   const translations: Point[] = [
     {x: 0, y: 0},
     createUnitCircleTranslation(0), // 0°
@@ -303,6 +363,14 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     createUnitCircleTranslation(Math.PI), // 180°
     createUnitCircleTranslation((3 / 2) * Math.PI), // 270°
     createUnitCircleTranslation(2 * Math.PI), // 360°
+    {x: LARGE_TRANSLATION, y: 0},
+    {x: LARGE_TRANSLATION, y: LARGE_TRANSLATION},
+    {x: 0, y: LARGE_TRANSLATION},
+    {x: -LARGE_TRANSLATION, y: LARGE_TRANSLATION},
+    {x: -LARGE_TRANSLATION, y: 0},
+    {x: -LARGE_TRANSLATION, y: -LARGE_TRANSLATION},
+    {x: 0, y: -LARGE_TRANSLATION},
+    {x: LARGE_TRANSLATION, y: -LARGE_TRANSLATION},
   ];
 
   translations.forEach((translation) => {
@@ -328,19 +396,11 @@ function testPoints(expectedLineCount: number, points: Point[]): void {
   console.log('Symmetry lines:');
   console.table(lines);
   assert.equal(lines.length, expectedLineCount);
-  assert.ok(linesUnique(lines));
 }
 
 function rotatePoints(points: Point[], radians: number): Point[] {
-  // ⎡ cosθ -sinθ ⎤  ⎡ x ⎤   ⎡ xcosθ - ysinθ ⎤
-  // ⎢            ⎥  ⎢   ⎥ = ⎢               ⎥
-  // ⎣ sinθ  cosθ ⎦  ⎣ y ⎦   ⎣ xsinθ + ycosθ ⎦
   const rotatedPoints = points.map((point) => {
-    const rotatedPoint: Point = {
-      x: point.x * Math.cos(radians) - point.y * Math.sin(radians),
-      y: point.x * Math.sin(radians) + point.y * Math.cos(radians),
-    };
-    return rotatedPoint;
+    return rotatePoint(point, radians);
   });
   return rotatedPoints;
 }
