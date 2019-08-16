@@ -1,7 +1,7 @@
 import { Point, Line } from './interfaces';
 
 export function projectPointOntoLine(point: Point, line: Line): Point {
-  // For line L passing through origin, compute projected P' using:
+  // Compute point P' by projecting point P onto line L which passes through origin:
   // P' = (L L^T / L^T L) P
   // where:
   // L is the vector representing the line
