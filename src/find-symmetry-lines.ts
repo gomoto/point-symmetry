@@ -6,7 +6,6 @@ import { projectPointOntoLine } from './project-point';
 const DEBUG = false;
 
 // Error tolerance in distance unit.
-// Do not use for tolerance in line coefficient units.
 const EPSILON = 1e-4;
 
 export function findSymmetryLines(points: Point[]): Line[] {
@@ -26,13 +25,10 @@ export function findSymmetryLines(points: Point[]): Line[] {
 
   // Create candidate lines connecting global center and each point + midpoint.
   const candidateLines = findCandidateLines(points);
-  // const candidateLines = findCandidateLines(points);
   debug(() => {
     console.log('candidateLines');
     console.table(candidateLines);
   });
-
-  // Sort by distance from global center? To start with candidates with stable lines.
 
   // Find first line that reflects all points. That line is one of the lines of symmetry.
   const firstLine = candidateLines.find((line) => doesLineReflectAllPoints(line, points));
@@ -47,7 +43,7 @@ export function findSymmetryLines(points: Point[]): Line[] {
 
   // Find the remaining lines by rotating the first line.
   // For N points, there are at most N lines of symmetry.
-  // The number of lines of symmetry is a factor of N or N - 1 (when one point coincides with the global center).
+  // The number of lines of symmetry is a factor of N or of N - 1 (when one point coincides with the global center).
   // For each factor in decreasing order starting from N, rotate the first line by 2π/N.
   // Return the first factor where all points are reflected by the rotated line.
   const N = points.length;
@@ -73,7 +69,6 @@ export function findSymmetryLines(points: Point[]): Line[] {
   // There are `factor` number of lines of symmetry. Expand on the first line by rotating it `factor` times.
   const lines: Line[] = [];
   for (let f = 0; f < factor; f++) {
-    console.log('asdf', firstLine, f * Math.PI / N, globalCenter);
     lines.push(rotateLine(firstLine, f * Math.PI / N, globalCenter));
   }
   debug(() => {
@@ -162,7 +157,7 @@ function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
   });
 }
 
-// Determine if a number is "zero" or less than some small value epsilon.
+// Determine if a number is "zero" (less than some small value epsilon).
 // Rounded floating point numbers are often close but not exact.
 function isNearZero(value: number): boolean {
   return Math.abs(value) < EPSILON;
