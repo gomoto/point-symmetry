@@ -96,12 +96,7 @@ function findCandidateLines(points: Point[]): Line[] {
       p2: pair[1],
     };
     candidates.push(crossLine);
-    // midpoint of crossLine is a point on normalLine
-    const midpoint: Point = {
-      x: (crossLine.p1.x + crossLine.p2.x) / 2,
-      y: (crossLine.p1.y + crossLine.p2.y) / 2,
-    };
-    const normalLine: Line = createNormalLine(crossLine, midpoint);
+    const normalLine: Line = bisectLine(crossLine);
     candidates.push(normalLine);
   });
   return candidates;
@@ -185,53 +180,30 @@ function reflectPointAcrossLine(point: Point, line: Line): Point {
   return reflectedPoint;
 }
 
-function isLineHorizontal(line: Line): boolean {
-  return isNearZero(line.p1.y - line.p2.y);
-}
-
-function isLineVertical(line: Line): boolean {
-  return isNearZero(line.p1.x - line.p2.x);
-}
-
-// Create line perpendicular to given line that passes through given point.
-function createNormalLine(line: Line, point: Point): Line {
-  // Points on returned line must be different points.
-  let otherPoint: Point;
-  if (isLineHorizontal(line)) {
-    otherPoint = {
-      x: point.x,
-      y: point.y + 1,
-    };
-  } else if (isLineVertical(line)) {
-    otherPoint = {
-      x: point.x + 1,
-      y: point.y,
-    };
-  } else {
-    // Solve line 1 for a, b given two points P1, P2:
-    //   y = ax + b
-    //   a = (P2.y - P1.y) / (P2.x - P1.x)
-    //   b = P2.y - a * P2.x
-
-    // Solve line 2 for a', b' given one point P3 and knowing that line 2 is perpendicular to line 1:
-    //   y = a'x + b
-    //   a' = (P1.x - P2.x) / (P2.y - P1.y) [negative reciprocal of a]
-    //   b' = P3.y - a' * P3.x
-
-    // 1st order polynomial coefficient, a'
-    const a = (line.p1.x - line.p2.x) / (line.p2.y - line.p1.y);
-    // 0th order polynomial coefficient, b'
-    const b = point.y - a * point.x;
-    otherPoint = {
-      x: point.x + 1,
-      y: a * (point.x + 1) + b,
-    };
-  }
-  const normalLine: Line = {
-    p1: point,
-    p2: otherPoint,
+// Create line perpendicular to given line that passes through
+// the midpoint of the two points that define the line.
+export function bisectLine(line: Line): Line {
+  const midpoint = findCenterPoint([line.p1, line.p2]);
+  // Center line at its midpoint.
+  // Line represented by a vector (Point).
+  const shiftedLine: Point = {
+    x: line.p1.x - midpoint.x,
+    y: line.p1.y - midpoint.y,
   };
-  return normalLine;
+  // Swap x and y and negate.
+  const shiftedBisector: Point = {
+    x: -shiftedLine.y,
+    y: shiftedLine.x,
+  };
+  // Unshift line
+  const bisector: Line = {
+    p1: midpoint,
+    p2: {
+      x: shiftedBisector.x + midpoint.x,
+      y: shiftedBisector.y + midpoint.y,
+    },
+  };
+  return bisector;
 }
 
 function debug(fn: () => void) {
