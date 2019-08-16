@@ -100,6 +100,7 @@ function findFirstLine(points: Point[]): Line | null {
   return null;
 }
 
+// Rotate line around point.
 function rotateLine(line: Line, radians: number, around: Point): Line {
   const rotatedP1 = rotatePoint({x: line.p1.x - around.x, y: line.p1.y - around.y}, radians);
   const rotatedP2 = rotatePoint({x: line.p2.x - around.x, y: line.p2.y - around.y}, radians);
@@ -132,6 +133,7 @@ function findCenterPoint(points: Point[]): Point {
   return p;
 }
 
+// Return true if line reflects all points.
 function doesLineReflectAllPoints(line: Line, points: Point[]): boolean {
   return points.every((point) => {
     const reflectedPoint = reflectPointAcrossLine(point, line);

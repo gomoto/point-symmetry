@@ -1,7 +1,7 @@
 import { Point } from './interfaces';
 
-// Rotate point around origin (0, 0).
 export function rotatePoint(point: Point, radians: number): Point {
+  // Rotate point around origin (0, 0).
   // ⎡ cosθ -sinθ ⎤  ⎡ x ⎤   ⎡ xcosθ - ysinθ ⎤
   // ⎢            ⎥  ⎢   ⎥ = ⎢               ⎥
   // ⎣ sinθ  cosθ ⎦  ⎣ y ⎦   ⎣ xsinθ + ycosθ ⎦
