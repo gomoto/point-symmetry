@@ -8,6 +8,7 @@ const DEBUG = false;
 // Error tolerance in distance unit.
 export const EPSILON = 1e-10;
 
+// Return all lines of symmetry for a collection of points.
 export function findSymmetryLines(points: Point[]): Line[] {
 
   // Zero points means zero lines of symmetry.
