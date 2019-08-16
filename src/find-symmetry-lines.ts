@@ -23,7 +23,9 @@ export function findSymmetryLines(points: Point[]): Line[] {
     console.table(globalCenter);
   });
 
-  // Create candidate lines connecting global center and each point + midpoint.
+  // Create candidate lines of symmetry. Each pair of points has two potential
+  // lines of symmetry lines, one that passes through the points and one normal
+  // to that line that also passes through the midpoint of the pair of points.
   const candidateLines = findCandidateLines(points);
   debug(() => {
     console.log('candidateLines');
@@ -83,9 +85,6 @@ function findCandidateLines(points: Point[]): Line[] {
   const candidates: Line[] = [];
   const pairs = findPointPairs(points);
   pairs.forEach((pair) => {
-    // Each pair has two potential symmetry lines, one that passes through the
-    // points and one normal to that line that also passes through the midpoint
-    // of the pair of points.
     const crossLine: Line = {
       p1: pair[0],
       p2: pair[1],
