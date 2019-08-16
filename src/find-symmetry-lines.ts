@@ -23,17 +23,8 @@ export function findSymmetryLines(points: Point[]): Line[] {
     console.table(globalCenter);
   });
 
-  // Create candidate lines of symmetry. Each pair of points has two potential
-  // lines of symmetry lines, one that passes through the points and one normal
-  // to that line that also passes through the midpoint of the pair of points.
-  const candidateLines = findCandidateLines(points);
-  debug(() => {
-    console.log('candidateLines');
-    console.table(candidateLines);
-  });
-
   // Find first line that reflects all points. That line is one of the lines of symmetry.
-  const firstLine = candidateLines.find((line) => doesLineReflectAllPoints(line, points));
+  const firstLine = findFirstLine(points);
   debug(() => {
     console.log('firstLine');
     console.table(firstLine);
@@ -81,19 +72,31 @@ export function findSymmetryLines(points: Point[]): Line[] {
   return lines;
 }
 
-function findCandidateLines(points: Point[]): Line[] {
-  const candidates: Line[] = [];
-  const pairs = findPointPairs(points);
-  pairs.forEach((pair) => {
-    const crossLine: Line = {
-      p1: pair[0],
-      p2: pair[1],
-    };
-    candidates.push(crossLine);
-    const normalLine: Line = bisectLine(crossLine);
-    candidates.push(normalLine);
-  });
-  return candidates;
+// Find first line that reflects all points. Each pair of points has two potential
+// lines of symmetry lines, one that passes through the points and one normal
+// to that line that also passes through the midpoint of the pair of points.
+function findFirstLine(points: Point[]): Line | undefined {
+  // N choose 2
+  for (let p = 0; p < points.length - 1; p++) {
+    for (let q = p + 1; q < points.length; q++) {
+      const pair: [Point, Point] = [
+        points[p],
+        points[q],
+      ];
+      const crossLine: Line = {
+        p1: pair[0],
+        p2: pair[1],
+      };
+      if (doesLineReflectAllPoints(crossLine, points)) {
+        return crossLine;
+      }
+      const normalLine: Line = bisectLine(crossLine);
+      if (doesLineReflectAllPoints(normalLine, points)) {
+        return normalLine;
+      }
+    }
+  }
+  return;
 }
 
 function rotateLine(line: Line, radians: number, around: Point): Line {
@@ -115,22 +118,6 @@ function factorize(n: number): number[] {
     }
   }
   return out;
-}
-
-// Return list of point pairs, unrepeated.
-function findPointPairs(points: Point[]): [Point, Point][] {
-  // N choose 2
-  const pairs: [Point, Point][] = [];
-  for (let p = 0; p < points.length - 1; p++) {
-    for (let q = p + 1; q < points.length; q++) {
-      const pair: [Point, Point] = [
-        points[p],
-        points[q],
-      ];
-      pairs.push(pair);
-    }
-  }
-  return pairs;
 }
 
 // Return the average point for a set of points.
