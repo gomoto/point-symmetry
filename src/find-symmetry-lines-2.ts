@@ -1,5 +1,6 @@
 import { Point, Line } from './interfaces';
 import { rotatePoint } from './rotate-point';
+import { projectPointOntoLine } from './project-point';
 
 // Toggle debug logging.
 const DEBUG = true;
@@ -182,40 +183,6 @@ function reflectPointAcrossLine(point: Point, line: Line): Point {
     y: point.y + 2 * dy,
   };
   return reflectedPoint;
-}
-
-// Return point resulting from projection of given point onto given line.
-function projectPointOntoLine(point: Point, line: Line): Point {
-  let intersectionPoint: Point;
-  if (isLineHorizontal(line)) {
-    intersectionPoint = {
-      x: point.x,
-      y: line.p1.y,
-    };
-  } else if (isLineVertical(line)) {
-    intersectionPoint = {
-      x: line.p1.x,
-      y: point.y,
-    };
-  } else {
-    const normal = createNormalLine(line, point);
-    // Intersect lines. Lines are guaranteed to intersect because they're perpendicular.
-    // Solve for x, y:
-    //   y = ax + b
-    //   y = a'x + b'
-    //   ---
-    //   x = (b' - b) / (a - a')
-    //   y = a * (b' - b) / (a - a') + b
-    const a = (line.p2.y - line.p1.y) / (line.p2.x - line.p1.x);
-    const b = line.p2.y - a * line.p2.x;
-    const aPrime = (normal.p2.y - normal.p1.y) / (normal.p2.x - normal.p1.x);
-    const bPrime = normal.p2.y - aPrime * normal.p2.x;
-    intersectionPoint = {
-      x: (bPrime - b) / (a - aPrime),
-      y: a * (bPrime - b) / (a - aPrime) + b,
-    };
-  }
-  return intersectionPoint;
 }
 
 function isLineHorizontal(line: Line): boolean {
