@@ -8,7 +8,7 @@ will return the complete set of lines of symmetry for those points.
 ## Observations
 
 1. Lines of symmetry all intersect at the averaged center of the points.
-2. Lines of symmetry occur in regular angular intervals when rotated with respect to the averaged center.
+2. Lines of symmetry are rotationally symmetric with respect to the averaged center.
 3. For N points, there are at most N lines of symmetry.
 4. For N points, the possible numbers of lines of symmetry are defined by
 the set of factors of N or of N-1 (when one point coincides with the averaged center).
