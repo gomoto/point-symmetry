@@ -3,7 +3,7 @@ import { rotatePoint } from './rotate-point';
 import { projectPointOntoLine } from './project-point';
 
 // Toggle debug logging.
-const DEBUG = true;
+const DEBUG = false;
 
 // Error tolerance in distance unit.
 // Do not use for tolerance in line coefficient units.

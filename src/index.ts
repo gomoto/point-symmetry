@@ -333,7 +333,7 @@ function testSymmetry(message: string, expectedLineCount: number, points: Point[
     1e-8, // 0.0000005729...°
     1e-7,
     1e-6,
-    // 1e-5,
+    1e-5,
     1e-4,
     1e-3,
     1e-2,
