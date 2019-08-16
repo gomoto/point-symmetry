@@ -6,7 +6,7 @@ import { projectPointOntoLine } from './project-point';
 const DEBUG = false;
 
 // Error tolerance in distance unit.
-const EPSILON = 1e-4;
+export const EPSILON = 1e-10;
 
 export function findSymmetryLines(points: Point[]): Line[] {
 

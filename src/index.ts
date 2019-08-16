@@ -1,4 +1,4 @@
-import { findSymmetryLines } from './find-symmetry-lines';
+import { findSymmetryLines, EPSILON } from './find-symmetry-lines';
 import { strict as assert } from 'assert';
 import { Point } from './interfaces';
 import { rotatePoint } from './rotate-point';
@@ -183,9 +183,9 @@ function main(): void {
   // Testing lines with large but non-infinite slopes
   testSymmetry('Five points, square plus center point, rotated and slightly askew', 4, [
     {x: 1, y: 0},
-    {x: 1e-8, y: 1}, // large positive slope for line through this point and center point
+    {x: EPSILON, y: 1}, // large positive slope for line through this point and center point
     {x: -1, y: 0},
-    {x: 1e-8, y: -1}, // large negative slope for line through this point and center point
+    {x: EPSILON, y: -1}, // large negative slope for line through this point and center point
     {x: 0, y: 0}, // center point
   ]);
 
